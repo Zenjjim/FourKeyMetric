@@ -44,7 +44,6 @@ def main():
     fig.suptitle(f"{CONFIG['project']}/{CONFIG['repo_name']}", weight="bold")
     gs = fig.add_gridspec(4, 5)
 
-    print(type(CONFIG['json']))
     # GET DATA
     build_data = get_data(get_build_url(CONFIG['project'], CONFIG['repo_id'], CONFIG['branch']), CONFIG['token'], CONFIG['json'])
     # build_data = pd.DataFrame(build_data["value"])

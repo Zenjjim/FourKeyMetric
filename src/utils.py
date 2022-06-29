@@ -1,4 +1,3 @@
-from pprint import pprint
 import requests
 import os
 import pandas as pd
@@ -47,8 +46,6 @@ def get_data(url, token, json_url=None):
         with open(json_url) as json_file:
             data = json.load(json_file)
     
-        # Print the type of data variable
-        print("Type:", type(data))
         data = pd.DataFrame(data["builds"])
         data = data[["number", "result", "displayName", "timestamp", "duration", "culprits"]]
         data = data[data['result'] == "SUCCESS"]

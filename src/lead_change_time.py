@@ -78,7 +78,6 @@ def lead_change_time(pr_data, build_data, back_track_months, axes):
     merged_pr_build_data_week.rename(columns = {"lead_change_time_delta_x": "lead_change_time_delta"}, inplace = True)
     median = merged_pr_build_data_week["lead_change_time_delta"].median()
     std = merged_pr_build_data_week["lead_change_time_delta"].std()
-    print(plot_data)
     plot_lead_change(merged_pr_build_data_week, plot_data , median, std, axes)
     merged_pr_build_data_week.sort_values("lead_change_time_delta")
     return median, std
