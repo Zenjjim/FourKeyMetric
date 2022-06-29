@@ -1,7 +1,8 @@
 import pandas as pd
 import math
-
-from utils import get_back_track_months, get_median, three_working_months_generator
+import matplotlib
+import matplotlib.pyplot as plt
+from utils import Color, get_back_track_months, get_median, three_working_months_generator
 
 def get_release_per_day(build_data):
     release_per_day = []
@@ -30,23 +31,40 @@ def deployment_frequency(frequency_week, frequency_month):
     # If atleast ones each week then weekly
     # If atleast ones each month then monthly
     # Else yearly
+    
     if (frequency_week >= 3):
-        return 'Daily'
+        return ('Daily', Color.green.value)
     elif (frequency_week >= 1):
-        return 'Weekly'
+        return ('Weekly', Color.green.value)
     elif (frequency_month >= 1):
-        return 'Monthly'
+        return ('Monthly', Color.yellow.value)
     else:
-        return 'Yearly'
+        return ('Yearly', Color.red.value)
     
 def fill_working_days(data, back_track_months):
     working_days = three_working_months_generator(back_track_months)
-    data = data[["id", "project", "repository", "sourceBranch",  "status", "result", "startTime", "finishTime", ]]
     data['date'] = data['finishTime'].dt.normalize()
     data = pd.merge(data, working_days, how="outer", on="date")
     return get_back_track_months(data, data.date, back_track_months)
 
-def calculate_deployment_frequency(build_data, back_track_months):
+def plot(data, score, axes):
+    data.plot.bar(x='week_start_date', y='count', rot=0, ax=axes[0])
+    axes[0].set_xticklabels(data['week_start_date'].dt.date)
+    axes[0].tick_params(labelrotation=45)
+    axes[0].set_title(f"Daily Deployments")
+    axes[0].set_ylabel("Deployments")
+    axes[0].set_xlabel("")
+    axes[0].get_legend().remove()
+    circle = plt.Circle((0, 0), 1, color=score[1])
+    axes[1].add_patch(circle)
+    axes[1].set_title("Deployment Frequency")
+    axes[1].set_xlim([-1, 1])
+    axes[1].set_ylim([-1, 1])
+    axes[1].text(0.5,0.5,score[0],horizontalalignment='center',verticalalignment='center', transform = axes[1].transAxes, fontsize=14)
+    axes[1].axis('off')
+    axes[1].set_box_aspect(1)
+
+def calculate_deployment_frequency(build_data, back_track_months, axes):
     build_data = fill_working_days(build_data, back_track_months)
     release_per_day = get_release_per_day(build_data)
     releases_per_week = get_release_per_week(release_per_day)
@@ -54,5 +72,6 @@ def calculate_deployment_frequency(build_data, back_track_months):
     frequency_week = get_median(releases_per_week)
     frequency_month = get_median(releases_per_month)
     score = deployment_frequency(frequency_week, frequency_month)
-    return score
+    plot(releases_per_week, score, axes)
+    return score[0]
     

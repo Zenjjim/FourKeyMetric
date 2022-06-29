@@ -1,8 +1,10 @@
+from pprint import pprint
 import requests
 import os
 import pandas as pd
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
+from enum import Enum
 
 def get_median(dataframe):
     return dataframe['count'].median()
@@ -39,13 +41,34 @@ def assert_ok(http_response):
         raise Exception(f"HTTP status: {status}. Body: {http_response.text}")
     return http_response.json()
 
-def get_data(url, token):
-    headers = get_auth_header(token)
+def get_data(url, token, json_url=None):
+    if json_url:
+        import json
+        with open(json_url) as json_file:
+            data = json.load(json_file)
+    
+        # Print the type of data variable
+        print("Type:", type(data))
+        data = pd.DataFrame(data["builds"])
+        data = data[["number", "result", "displayName", "timestamp", "duration", "culprits"]]
+        data = data[data['result'] == "SUCCESS"]
+        data["queueTime"] = pd.to_datetime(data["timestamp"], unit='ms')
+        data["startTime"] = pd.to_datetime(data["timestamp"], unit='ms')
+        data["finishTime"] = pd.to_datetime(data["timestamp"]+data["duration"], unit='ms')
+        data["id"] = data['number']
+        
+        
+    else:
+        headers = get_auth_header(token)
 
-    r = requests.get(
-        url,
-        headers=headers,
-    )
-    data = assert_ok(r)
+        r = requests.get(
+            url,
+            headers=headers,
+        )
+        data = assert_ok(r)
     return data
 
+class Color(Enum):
+    green = "forestgreen"
+    yellow = "orange"
+    red = "#ee0000"
