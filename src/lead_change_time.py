@@ -39,7 +39,7 @@ def plot_lead_change(merged_pr_build_data_week,merged_pr_build_data, median, std
     axes[1].set_ylim([-1, 1])
     axes[1].text(0.5,0.5,median_category_var,horizontalalignment='center',
      verticalalignment='center', transform = axes[1].transAxes, fontsize=14)
-    axes[1].text(0.5,0.3,f"*{median.days} days",horizontalalignment='center',
+    axes[1].text(0.5,0.3,f"*{median.days} day(s)",horizontalalignment='center',
      verticalalignment='center', transform = axes[1].transAxes, fontsize=8)
     axes[1].axis('off')
     axes[1].set_box_aspect(1)

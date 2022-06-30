@@ -2,7 +2,9 @@ import os
 from dotenv import load_dotenv
 from pathlib import Path
 import pandas as pd
+from change_failure_rate import change_failure_rate
 from lead_change_time import lead_change_time
+from time_to_restore_service import time_to_restore_service
 from utils import get_data
 from urls import get_build_url, get_pr_url
 from deployment_frequency import calculate_deployment_frequency
@@ -57,12 +59,14 @@ def main():
     pr_data["creationDate"] = pd.to_datetime(pr_data['creationDate']).dt.tz_localize(None)
     pr_data["closedDate"] = pd.to_datetime(pr_data['closedDate']).dt.tz_localize(None)
     
-    
+    #time_to_restore_service(pr_data, build_data, CONFIG['back_track_months'], (fig.add_subplot(gs[0:2, :2]), fig.add_subplot(gs[0, 2])))
     deployment_frequency_score = calculate_deployment_frequency(build_data, CONFIG['back_track_months'], (fig.add_subplot(gs[0:2, 3:]), fig.add_subplot(gs[1, 2])))
     lead_change_time_median, lead_change_time_std = lead_change_time(pr_data, build_data, CONFIG['back_track_months'], (fig.add_subplot(gs[0:2, :2]), fig.add_subplot(gs[0, 2])))
+    change_failure_rate_score = change_failure_rate(pr_data, build_data, CONFIG['back_track_months'], (fig.add_subplot(gs[2:5, :2]), fig.add_subplot(gs[2, 2])))
     
     print(f"Deployment frequency: {deployment_frequency_score}")
     print(f"Lead change time: \n Median: {lead_change_time_median}\n STD: {lead_change_time_std}")
+    print(f"Change failure rate: {change_failure_rate_score}")
     
     plt.subplots_adjust(left=0.1,
                     bottom=0.1, 
