@@ -1,3 +1,5 @@
+
+
 using FourKeyMetrics.Entities;
 using FourKeyMetrics.ClientHandlers.Azure;
 using FourKeyMetrics.ClientHandlers.Azure.ClientModels;
@@ -8,23 +10,18 @@ using Newtonsoft.Json;
 
 namespace FourKeyMetrics.Service;
 
-public class FourKeyMetricService
+public class FourKeyService
 {
     private DeploymentService _deploymentService;
 
-    public FourKeyMetricService()
+    public FourKeyService()
     {
         _deploymentService = new DeploymentService();
 
         
     }
 
-    public String Get()
-    {
-        return "Her kommer masse data";
-    }
-
-    public void FetchAllData()
+    public void fetchAllData()
     {
         List<Config> configs;
         using (StreamReader r = new StreamReader("config.json"))
@@ -40,3 +37,4 @@ public class FourKeyMetricService
     }
 
 }
+

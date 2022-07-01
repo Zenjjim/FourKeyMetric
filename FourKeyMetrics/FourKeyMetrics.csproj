@@ -16,7 +16,7 @@
   <ItemGroup>
     <Compile Remove="Models\**" />
     <Compile Remove="Services\MongoService.cs" />
-    <Compile Remove="Services\FourKeyMetricService.cs" />
+    <Compile Remove="Services\FourKeyService.cs" />
   </ItemGroup>
 
   <ItemGroup>

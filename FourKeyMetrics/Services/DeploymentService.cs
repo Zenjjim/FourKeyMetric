@@ -30,10 +30,8 @@ public class DeploymentService
         // _deployments.InsertOne(deployment);
     }
 
-    public void InsertAllBuildData()
+    public void InsertAllBuildData(String platform, String organizaion)
     {
-        String platform = "Azure";
-        String organizaion = "mollerdigital";
         var projects = _azure.GetProjects(organizaion).Result.Value;
 
         var deployments = new List<Deployment>();
@@ -64,10 +62,7 @@ public class DeploymentService
                 IsOrdered = false
             });
         }
-        catch (MongoBulkWriteException e)
-        {
-            Console.WriteLine(e);
-        }
+        catch (MongoBulkWriteException){}
     } 
 }
 
