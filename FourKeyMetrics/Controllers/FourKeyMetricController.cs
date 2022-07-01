@@ -1,4 +1,6 @@
-using FourKeyMetrics.Entity;
+using FourKeyMetrics.ClientHandlers.Azure.ClientModels;
+using FourKeyMetrics.Entities;
+using FourKeyMetrics.Service;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
 
@@ -9,24 +11,25 @@ namespace FourKeyMetrics.Controllers;
 public class FourKeyMetricController : ControllerBase
 {
     private readonly ILogger<FourKeyMetricController> _logger;
-    private readonly IMongoCollection<Deployment> _deployments;
+    private DeploymentService _deploymentService;
     public FourKeyMetricController(ILogger<FourKeyMetricController> logger)
     {
         _logger = logger;
-        _deployments = DeploymentDb.Open();
+        _deploymentService = new DeploymentService();
     }
 
     [HttpGet(Name = "GetFourKeyMetric")]
     public Task<List<Deployment>> Get()
     {
-        return _deployments.Find(_ => true).ToListAsync();
+        return _deploymentService.GetDeployments();
     }
 
     [HttpPost(Name = "CronFourKeyMetric")]
-    public void Post(Deployment deployment)
+    public void Post()
     {
-        Console.Write(deployment);
-        _deployments.InsertOne(deployment);
+        _deploymentService.InsertAllBuildData();
+        Ok();
+
     }
 
 }
