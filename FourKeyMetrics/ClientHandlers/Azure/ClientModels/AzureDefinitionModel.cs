@@ -13,10 +13,10 @@ namespace FourKeyMetrics.ClientHandlers.Azure.ClientModels
     public partial class AzureDefinitionModel
     {
         [J("count", NullValueHandling = N.Ignore)] public long? Count { get; set; }      
-        [J("value", NullValueHandling = N.Ignore)] public List<AzureDefinitionValue> Value { get; set; }
+        [J("value", NullValueHandling = N.Ignore)] public List<AzureDefinitionModelValue> Value { get; set; }
     }
 
-    public partial class AzureDefinitionValue
+    public partial class AzureDefinitionModelValue
     {
         [J("_links", NullValueHandling = N.Ignore)]      public ValueLinks Links { get; set; }           
         [J("quality", NullValueHandling = N.Ignore)]     public string Quality { get; set; }             

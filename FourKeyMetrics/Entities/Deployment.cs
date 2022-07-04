@@ -3,14 +3,13 @@ using MongoDB.Driver;
 
 namespace FourKeyMetrics.Entities;
 
-public class Deployment 
+public class Deployment
 {
-    public Deployment(long startTime, long finishTime, string result, string repository, string definition, string project, string organization, string developer, string platform)
+    public Deployment(long startTime, long finishTime, string repository, string definition, string project, string organization, string developer, string platform)
     {
         _id = ObjectId.GenerateNewId();
         StartTime = startTime;
         FinishTime = finishTime;
-        Result = result;
         Repository = repository;
         Definition = definition;
         Project = project;
@@ -23,8 +22,6 @@ public class Deployment
     public long StartTime { get; set; }
 
     public long FinishTime { get; set; }
-
-    public String Result { get; set;}
 
     public String Repository { get; set;}
 

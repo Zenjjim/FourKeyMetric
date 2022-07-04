@@ -9,21 +9,20 @@ using MongoDB.Driver;
 
 namespace FourKeyMetrics.Service;
 
-public class DeploymentService
+public class ChangeService
 {
-    private readonly IMongoCollection<Deployment> _deployments;
-    public DeploymentService()
+    private readonly IMongoCollection<Change> _changes;
+    public ChangeService()
     {
-        _deployments = DeploymentDb.Open();
+        _changes = ChangeDb.Open();
     }
-
-
-    public void InsertAllDeploymentData(List<Deployment> deployments)
+    
+    public void InsertAllChangeData(List<Change> changes)
     {
 
         try
         {
-            _deployments.InsertMany(deployments, new InsertManyOptions
+            _changes.InsertMany(changes, new InsertManyOptions
             {
                 IsOrdered = false
             });
