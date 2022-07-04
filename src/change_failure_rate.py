@@ -56,18 +56,11 @@ def change_failure_rate(pr_data, build_data, back_track_months, axes):
     merged_pr_build_data["count"] = 1
     
 
-    #merged_pr_build_data["count"] = merged_pr_build_data["week_start_date"].value_counts(dropna=False) #["week_start_date"])
-    merged_pr_build_data = (merged_pr_build_data.groupby("week_start_date").sum()-1).reset_index()
-    #print(merged_pr_build_data["count"])
+    merged_pr_build_data = (merged_pr_build_data.groupby("week_start_date").sum()-1).reset_index().index()
 
-    #merged_pr_build_data["count"] = merged_pr_build_data.groupby("week_start_date")["week_start_date"].count() #["week_start_date"])
-    #merged_pr_build_data  = merged_pr_build_data.groupby("week_start_date").count().reset_index()
-    #print(merged_pr_build_data)
     build_data_all = fill_working_days(build_data, back_track_months)
     builds_per_day = get_release_per_day(build_data_all)
     builds_per_week = get_release_per_week(builds_per_day)
-    #failures_per_week = merged_pr_build_data
-    #failures_per_week = failures_per_week.groupby('week_start_date')
 
     all_deploys_and_fails = merged_pr_build_data.merge(builds_per_week, left_on='week_start_date', right_on='week_start_date')
     change_failure_rate_df = all_deploys_and_fails

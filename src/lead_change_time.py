@@ -6,12 +6,12 @@ import numpy as np
 
 def median_category(median):
     if (median < 24 * 60):
-        return ('One Day', Color.green.value)
-    elif (median < 168 * 60):
-        return ('One Week', Color.yellow.value)
-    elif (median < 730 * 60):
+        return ('One Day', Color.purple.value)
+    elif (median < 24 * 7 * 60):
+        return ('One Week', Color.green.value)
+    elif (median < 24 * 30 * 60):
         return ('One Month', Color.yellow.value)
-    elif (median < 730 * 6* 60):
+    elif (median < 24 * 30 * 6 * 60):
         return ('Six Months', Color.red.value)
     else:
         return ('One year', Color.red.value)

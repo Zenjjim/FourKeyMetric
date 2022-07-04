@@ -65,7 +65,32 @@ def get_data(url, token, json_url=None):
         data = assert_ok(r)
     return data
 
+def get_ticket_data(url, token, json_url=None):
+    """if json_url:
+        import json
+        with open(json_url) as json_file:
+            data = json.load(json_file)
+    
+        data = pd.DataFrame(data["builds"])
+        data = data[["number", "result", "displayName", "timestamp", "duration", "culprits"]]
+        data = data[data['result'] == "SUCCESS"]
+        data["queueTime"] = pd.to_datetime(data["timestamp"], unit='ms')
+        data["startTime"] = pd.to_datetime(data["timestamp"], unit='ms')
+        data["finishTime"] = pd.to_datetime(data["timestamp"]+data["duration"], unit='ms')
+        data["id"] = data['number']
+        
+        
+    else:"""
+    headers = get_auth_header(token)
+
+    r = requests.get(
+        url,
+        headers=headers,
+    )
+    return r
+
 class Color(Enum):
+    purple = "darkviolet"
     green = "forestgreen"
     yellow = "orange"
     red = "#ee0000"

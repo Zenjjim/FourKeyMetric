@@ -31,8 +31,9 @@ def deployment_frequency(frequency_week, frequency_month):
     # If atleast ones each week then weekly
     # If atleast ones each month then monthly
     # Else yearly
-    
-    if (frequency_week >= 3):
+    if (frequency_week >= 5):
+        return ('Daily', Color.purple.value)
+    elif (frequency_week >= 3):
         return ('Daily', Color.green.value)
     elif (frequency_week >= 1):
         return ('Weekly', Color.green.value)
