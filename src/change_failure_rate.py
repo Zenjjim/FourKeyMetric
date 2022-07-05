@@ -56,7 +56,7 @@ def change_failure_rate(pr_data, build_data, back_track_months, axes):
     merged_pr_build_data["count"] = 1
     
 
-    merged_pr_build_data = (merged_pr_build_data.groupby("week_start_date").sum()-1).reset_index().index()
+    merged_pr_build_data = (merged_pr_build_data.groupby("week_start_date").sum()-1)
 
     build_data_all = fill_working_days(build_data, back_track_months)
     builds_per_day = get_release_per_day(build_data_all)
