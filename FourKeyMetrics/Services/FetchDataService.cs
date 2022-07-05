@@ -8,15 +8,15 @@ using Newtonsoft.Json;
 
 namespace FourKeyMetrics.Service;
 
-public class FourKeyMetricService
+public class FetchDataService
 {
-    private DeploymentService _deploymentService;
-    private ChangeService _changeService;
-    private IncidentService _incidentService;
-    private AzureHandler _azure;
-    private JiraHandler _jira;
+    private readonly DeploymentService _deploymentService;
+    private readonly ChangeService _changeService;
+    private readonly IncidentService _incidentService;
+    private readonly AzureHandler _azure;
+    private readonly JiraHandler _jira;
 
-    public FourKeyMetricService()
+    public FetchDataService()
     {
         _deploymentService = new DeploymentService();
         _changeService = new ChangeService();
@@ -45,7 +45,7 @@ public class FourKeyMetricService
         }
     }
 
-    public void GetAzureData(String platform, String organizaion)
+    private void GetAzureData(String platform, String organization)
     {
         var deployments = new List<Deployment>();
         var changes = new List<Change>();
@@ -53,34 +53,34 @@ public class FourKeyMetricService
         
         var prFixWords = new List<string>{"bug", "fix", "crash", "error", "issue"};
 
-        var projects = _azure.GetProjects(organizaion).Result.Value;
+        var projects = _azure.GetProjects(organization).Result.Value;
 
         foreach (var project in projects)
         {
-            var repositories = _azure.GetRepositories(organizaion, project).Result.Value;
-            var definitions = _azure.GetDefinitions(organizaion, project).Result.Value;
+            var repositories = _azure.GetRepositories(organization, project).Result.Value;
+            var definitions = _azure.GetDefinitions(organization, project).Result.Value;
             foreach (var definition in definitions)
             {
                 var repository = repositories.Find(rep => rep.Name == definition.Name);
                 if (repository == null) continue;
-                var builds = _azure.GetBuilds(organizaion, project, definition, repository).Result.Value;
+                var builds = _azure.GetBuilds(organization, project, definition, repository).Result.Value;
                 foreach (var build in builds)
                 {
-                    deployments.Add(new Deployment(build.QueueTime.Value.ToUnixTimeSeconds(), build.FinishTime.Value.ToUnixTimeSeconds(), repository.Name, definition.Id.ToString(), project.Name, organizaion, build.RequestedFor.DisplayName, platform));
+                    deployments.Add(new Deployment(build.QueueTime.Value.ToUnixTimeSeconds(), build.FinishTime.Value.ToUnixTimeSeconds(), repository.Name, definition.Id.ToString(), project.Name, organization, build.RequestedFor.DisplayName, platform));
                 }
 
-                var pullRequests = _azure.GetPullRequests(organizaion, project, repository).Result.Value;
+                var pullRequests = _azure.GetPullRequests(organization, project, repository).Result.Value;
                 foreach (var pullRequest in pullRequests)
                 {
                     var pullRequestCommits =
-                        _azure.GetPullRequestsCommits(organizaion, project, repository, pullRequest).Result.Value;
+                        _azure.GetPullRequestsCommits(organization, project, repository, pullRequest).Result.Value;
                         var nrOfCommits = pullRequestCommits.Count;
                         long pullRequestSize = 0;
                     try
                     {
                         foreach (var comment in pullRequestCommits)
                         {
-                            var commentChanges = _azure.GetCommitChanges(organizaion, project, repository, comment)
+                            var commentChanges = _azure.GetCommitChanges(organization, project, repository, comment)
                                 .Result.ChangeCounts;
                             pullRequestSize += commentChanges.Add.HasValue ? commentChanges.Add.Value : 0;
                             pullRequestSize += commentChanges.Edit.HasValue ? commentChanges.Edit.Value : 0;
@@ -105,7 +105,7 @@ public class FourKeyMetricService
                         changes.Add(new Change(pullRequest.CreationDate.Value.ToUnixTimeSeconds(),
                             finishTime, pullRequestSize, nrOfCommits,
                             pullRequest.PullRequestId.ToString(), repository.DefaultBranch, repository.Name,
-                            project.Name, organizaion, pullRequest.CreatedBy.DisplayName, platform));
+                            project.Name, organization, pullRequest.CreatedBy.DisplayName, platform));
                         
                         if (isFixPullRequest)
                         {
@@ -121,7 +121,7 @@ public class FourKeyMetricService
                             {
                                 startTime = pullRequest.CreationDate.Value.ToUnixTimeSeconds();
                             }
-                            incidents.Add(new Incident(startTime, finishTime, jiraTicketKey, pullRequest.Title, repository.Name, project.Name, organizaion, platform )); 
+                            incidents.Add(new Incident(startTime, finishTime, jiraTicketKey, pullRequest.Title, repository.Name, project.Name, organization, platform )); 
 
                         }
                     }

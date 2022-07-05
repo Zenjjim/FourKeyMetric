@@ -41,9 +41,19 @@ public static class IncidentDb
 {
     public static IMongoCollection<Incident> Open()
     {
-
         var client = new MongoClient(Environment.GetEnvironmentVariable("MONGO_URL"));
-        var db = client.GetDatabase("FourKeyMetrics");
-        return db.GetCollection<Incident>("incidents");
+        var db = client.GetDatabase(Environment.GetEnvironmentVariable("MONGO_DB"));
+        var collectionName = "incidents";
+        var uniqueIndexes =
+            "{ Platform: 1, Organization: 1, Project: 1, Repository: 1, JiraTicket: 1, StartTime: 1 }";
+        var collectionExists = db.ListCollectionNames().ToList().Contains(collectionName);
+        if (collectionExists == false) {
+            db.CreateCollection(collectionName);
+            var collection = db.GetCollection<Incident>(collectionName);
+            var options = new CreateIndexOptions { Unique = true };
+            collection.Indexes.CreateOne(uniqueIndexes, options);
+        }
+
+        return db.GetCollection<Incident>(collectionName);
     }
 }

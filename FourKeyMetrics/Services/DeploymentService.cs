@@ -29,6 +29,16 @@ public class DeploymentService
             });
         }
         catch (MongoBulkWriteException){}
-    } 
+    }
+
+    public async void GetDeployments()
+    {
+        var threeMontsAgo = new DateTime().AddMonths(-3);
+        var filter = Builders<Deployment>.Filter.Gte("StartTime", threeMontsAgo);
+        var sheee = _deployments.Find(filter);
+        
+    }
+    
+    
 }
 
