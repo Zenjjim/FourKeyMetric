@@ -4,13 +4,11 @@ using MongoDB.Driver;
 namespace FourKeyMetrics.Entities;
 
 public class Change {
-    public Change(long startTime, long finishTimeTime, bool isInProduction, bool isFix, long prSize, long nrOfCommits, string pullRequestId, string branch, string repository, string project, string organization, string developer, string platform)
+    public Change(long startTime, long finishTimeTime, long prSize, long nrOfCommits, string pullRequestId, string branch, string repository, string project, string organization, string developer, string platform)
     {
         _id = ObjectId.GenerateNewId();
         StartTime = startTime;
         FinishTimeTime = finishTimeTime;
-        IsInProduction = isInProduction;
-        IsFix = isFix;
         PrSize = prSize;
         NrOfCommits = nrOfCommits;
         PullRequestId = pullRequestId;
@@ -27,10 +25,6 @@ public class Change {
     public long StartTime { get; set; } // Pull request start time
     
     public long FinishTimeTime { get; set; } // Build finish time
-    
-    public Boolean IsFix { get; set;} // Discussion is needed
-    
-    public Boolean IsInProduction { get; set;}
     
     public long PrSize { get; set;} // Sum of all edits in all commits
     

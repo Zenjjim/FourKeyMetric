@@ -12,13 +12,17 @@ public class FourKeyMetricService
 {
     private DeploymentService _deploymentService;
     private ChangeService _changeService;
-    private AzureManager _azure;
+    private IncidentService _incidentService;
+    private AzureHandler _azure;
+    private JiraHandler _jira;
 
     public FourKeyMetricService()
     {
         _deploymentService = new DeploymentService();
         _changeService = new ChangeService();
-        _azure = new AzureManager(Environment.GetEnvironmentVariable("AZURE_TOKEN"));
+        _incidentService = new IncidentService();
+        _azure = new AzureHandler(Environment.GetEnvironmentVariable("AZURE_TOKEN"));
+        _jira = new JiraHandler(System.Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes($"{Environment.GetEnvironmentVariable("JIRA_USER")}:{Environment.GetEnvironmentVariable("JIRA_TOKEN")}")));
     }
 
     public String Get()
@@ -45,6 +49,8 @@ public class FourKeyMetricService
     {
         var deployments = new List<Deployment>();
         var changes = new List<Change>();
+        var incidents = new List<Incident>();
+        
         var prFixWords = new List<string>{"bug", "fix", "crash", "error", "issue"};
 
         var projects = _azure.GetProjects(organizaion).Result.Value;
@@ -86,35 +92,46 @@ public class FourKeyMetricService
                         Console.WriteLine("## SUM CHANGES:###");
                         Console.WriteLine(e);
                     }
+                    
+                    var isFixPullRequest = prFixWords.Any(s =>
+                        pullRequest.Title.Contains(s, StringComparison.OrdinalIgnoreCase));
 
-                    long finishTime;
-                    bool isInProduction;
                     try
                     {
-                        var goodBuilds = builds
+                        var finishTime = builds
                             .Where(build => build.QueueTime.Value >= pullRequest.ClosedDate.Value)
-                            .OrderBy(build => build.QueueTime.Value);
-                        finishTime = goodBuilds.First().FinishTime.Value.ToUnixTimeSeconds();
-                        isInProduction = true;
-                    }
-                    catch (Exception e)
-                    {
-                        finishTime = pullRequest.ClosedDate.Value.ToUnixTimeSeconds();
-                        isInProduction = false;
-                    }
-                        var isFix = prFixWords.Any(s =>
-                            pullRequest.Title.Contains(s, StringComparison.OrdinalIgnoreCase));
+                            .OrderBy(build => build.QueueTime.Value).First().FinishTime.Value.ToUnixTimeSeconds();
                         
                         changes.Add(new Change(pullRequest.CreationDate.Value.ToUnixTimeSeconds(),
-                            finishTime, isInProduction, isFix, pullRequestSize, nrOfCommits,
+                            finishTime, pullRequestSize, nrOfCommits,
                             pullRequest.PullRequestId.ToString(), repository.DefaultBranch, repository.Name,
                             project.Name, organizaion, pullRequest.CreatedBy.DisplayName, platform));
+                        
+                        if (isFixPullRequest)
+                        {
+                            long startTime;
+                            string? jiraTicketKey = null;
+                            try
+                            {
+                                var jiraTicket = _jira.GetTicket(pullRequest.Title.Split(" ").First()).Result;
+                                startTime = jiraTicket.Fields.Created.ToUnixTimeSeconds();
+                                jiraTicketKey = jiraTicket.Key;
+                            }
+                            catch (Exception)
+                            {
+                                startTime = pullRequest.CreationDate.Value.ToUnixTimeSeconds();
+                            }
+                            incidents.Add(new Incident(startTime, finishTime, jiraTicketKey, pullRequest.Title, repository.Name, project.Name, organizaion, platform )); 
+
+                        }
+                    }
+                    catch (Exception){ }
                 }
-                
             }
             
             _deploymentService.InsertAllDeploymentData(deployments);
             _changeService.InsertAllChangeData(changes);
+            _incidentService.InsertAllIncidentData(incidents);
 
 
         }

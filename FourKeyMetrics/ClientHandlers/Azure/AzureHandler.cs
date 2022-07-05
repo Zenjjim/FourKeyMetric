@@ -4,11 +4,11 @@ using Newtonsoft.Json;
 
 namespace  FourKeyMetrics.ClientHandlers.Azure;
 
-public class AzureManager
+public class AzureHandler
 {
     private readonly HttpClient _client;
 
-    public AzureManager(String token)
+    public AzureHandler(String token)
     {
         _client = new HttpClient();
         _client.DefaultRequestHeaders.Add("Authorization", $"Basic {token}");
