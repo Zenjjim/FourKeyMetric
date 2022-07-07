@@ -1,11 +1,8 @@
-using FourKeyMetrics.Entities;
-using FourKeyMetrics.ClientHandlers.Azure;
-using FourKeyMetrics.ClientHandlers.Azure.ClientModels;
-using Microsoft.AspNetCore.Mvc;
-using MongoDB.Bson;
-using MongoDB.Driver;
+using FourKeyMetrics.Models;
+using FourKeyMetrics.Service;
+using MathNet.Numerics.Statistics;
 
-namespace FourKeyMetrics.Service.FourKeyService;
+namespace FourKeyMetrics.Services.FourKeyService;
 
 public class DeploymentFrequencyService
 {
@@ -16,8 +13,12 @@ public class DeploymentFrequencyService
         _deploymentService = new DeploymentService();
     }
 
-    public void Calculate()
+    public async Task<DeploymentFrequencyModel> Calculate(int intervalMonths, string? organization, string? project, string? repository)
     {
-        _deploymentService.GetDeployments();
+        
+        var deployments = await _deploymentService.GetDeployments(intervalMonths, organization, project, repository);
+        var deploymentWeeks = await Utils.GetWeeks(intervalMonths, deployments);
+        return new DeploymentFrequencyModel(deploymentWeeks.Select(dW => dW.GetDeploymentDays()).Median(), deploymentWeeks);
     }
+
 }

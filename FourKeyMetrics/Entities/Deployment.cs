@@ -1,3 +1,4 @@
+using System.Globalization;
 using MongoDB.Bson;
 using MongoDB.Driver;
 
@@ -34,6 +35,20 @@ public class Deployment
     public String Developer { get; set;}
 
     public String Platform { get; set;}
+
+
+    public DateTime GetStartDateTime()
+    {
+        return new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc).AddSeconds(this.StartTime).ToLocalTime();
+    }    
+    public DateTime GetFinishDateTime()
+    {
+        return new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc).AddSeconds(this.FinishTime).ToLocalTime();
+    }
+    public int GetWeek()
+    {
+        return DateTimeFormatInfo.CurrentInfo.Calendar.GetWeekOfYear(this.GetStartDateTime(), CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday);
+    }
 }
 public static class DeploymentDb
 {

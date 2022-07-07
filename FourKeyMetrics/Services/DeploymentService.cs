@@ -31,14 +31,29 @@ public class DeploymentService
         catch (MongoBulkWriteException){}
     }
 
-    public async void GetDeployments()
-    {
-        var threeMontsAgo = new DateTime().AddMonths(-3);
-        var filter = Builders<Deployment>.Filter.Gte("StartTime", threeMontsAgo);
-        var sheee = _deployments.Find(filter);
+    public async Task<IAsyncCursor<Deployment>> GetDeployments(int intervalMonths, string? organization, string? project, string? repository)
+    {;
+        var filter = Builders<Deployment>.Filter.Gte("StartTime", DateTimeOffset.Now.AddMonths(intervalMonths).ToUnixTimeSeconds());
+        if (organization != null)
+        {
+            var filterOrganization = Builders<Deployment>.Filter.Eq("Organization", organization);
+            filter &= filterOrganization;
+            
+        }
+        if (project != null)
+        {
+            var filterProject = Builders<Deployment>.Filter.Eq("Project", project);
+            filter &= filterProject;
+            
+        }       
+        if (repository != null)
+        {
+            var filterRepository = Builders<Deployment>.Filter.Eq("Repository", repository);
+            filter &= filterRepository;
+        }
+        
+        return await _deployments.FindAsync(filter);
         
     }
-    
-    
 }
 
