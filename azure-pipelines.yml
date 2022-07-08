@@ -1,0 +1,35 @@
+trigger:
+  - main
+
+stages:
+  - stage: container
+    displayName: Build and push container image
+    jobs:
+      - job: container
+        steps:
+          - task: gitversion/setup@0
+            displayName: "Setup GitVersion"
+            inputs:
+              versionSpec: "5.x"
+          - task: gitversion/execute@0
+            displayName: "Determine version"
+            inputs:
+              additionalArguments: /overrideconfig mode=Mainline
+          - bash: |
+              git tag "$(Build.BuildNumber)"
+              git -c "http.https://mollerdigital@dev.azure.com.extraheader=AUTHORIZATION: bearer $(System.AccessToken)" push origin "$(Build.BuildNumber)"
+              cd FourKeyMetrics
+            displayName: "Push git tag"
+          - task: Docker@2
+            displayName: "Login to ACR"
+            inputs:
+              command: login
+              containerRegistry: moller-summer22-acr-serviceconnection
+          - task: Docker@2
+            displayName: "Build and push image"
+            inputs:
+              command: buildAndPush
+              repository: summer22/devops-metrics
+              containerRegistry: moller-summer22-acr-serviceconnection
+              tags: |
+                $(Build.BuildNumber)
