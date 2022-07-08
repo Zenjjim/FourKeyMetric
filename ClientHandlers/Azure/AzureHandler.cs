@@ -1,8 +1,7 @@
-using FourKeyMetrics.ClientHandlers.Azure.ClientModels;
-using MongoDB.Bson;
+using devops_metrics.ClientHandlers.Azure.ClientModels;
 using Newtonsoft.Json;
 
-namespace  FourKeyMetrics.ClientHandlers.Azure;
+namespace devops_metrics.ClientHandlers.Azure;
 
 public class AzureHandler
 {

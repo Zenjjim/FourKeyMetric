@@ -1,13 +1,9 @@
 
 
-using FourKeyMetrics.Entities;
-using FourKeyMetrics.ClientHandlers.Azure;
-using FourKeyMetrics.ClientHandlers.Azure.ClientModels;
-using Microsoft.AspNetCore.Mvc;
-using MongoDB.Bson;
+using devops_metrics.Entities;
 using MongoDB.Driver;
 
-namespace FourKeyMetrics.Service;
+namespace devops_metrics.Services;
 
 public class DeploymentService
 {

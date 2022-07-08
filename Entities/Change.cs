@@ -2,7 +2,7 @@ using System.Globalization;
 using MongoDB.Bson;
 using MongoDB.Driver;
 
-namespace FourKeyMetrics.Entities;
+namespace devops_metrics.Entities;
 
 public class Change {
     public Change(long startTime, long finishTime, long prSize, long nrOfCommits, string pullRequestId, string branch, string repository, string project, string organization, string developer, string platform)
@@ -45,7 +45,7 @@ public class Change {
 
     public String Platform { get; set;}
 
-    public double Delta() => (this.FinishTime - this.StartTime);
+    public double Delta() => this.FinishTime - this.StartTime;
     public DateTime GetStartDateTime() => new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc).AddSeconds(this.StartTime).ToLocalTime();
     public DateTime GetFinishDateTime() => new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc).AddSeconds(this.FinishTime).ToLocalTime();
     public int GetWeek() => DateTimeFormatInfo.CurrentInfo.Calendar.GetWeekOfYear(this.GetStartDateTime(), CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday);

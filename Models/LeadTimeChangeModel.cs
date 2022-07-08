@@ -1,7 +1,7 @@
-using FourKeyMetrics.Entities;
-using FourKeyMetrics.Services.FourKeyService;
 
-namespace FourKeyMetrics.Models;
+using devops_metrics.Entities;
+
+namespace devops_metrics.Models;
 
 public class LeadTimeChangeModel
 {

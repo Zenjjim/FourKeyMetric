@@ -2,7 +2,7 @@ using System.Globalization;
 using MongoDB.Bson;
 using MongoDB.Driver;
 
-namespace FourKeyMetrics.Entities;
+namespace devops_metrics.Entities;
 
 public class Deployment
 {

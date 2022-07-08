@@ -1,16 +1,16 @@
-using FourKeyMetrics.Service;
+using devops_metrics.Services;
 using Microsoft.AspNetCore.Mvc;
 
-namespace FourKeyMetrics.Controllers;
+namespace devops_metrics.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-
-public class FourKeyMetricController : ControllerBase
+public class DevOpsMetricController : ControllerBase
 {
-    private readonly ILogger<FourKeyMetricController> _logger;
     private readonly FetchDataService _fetchDataService;
-    public FourKeyMetricController(ILogger<FourKeyMetricController> logger)
+    private readonly ILogger<DevOpsMetricController> _logger;
+
+    public DevOpsMetricController(ILogger<DevOpsMetricController> logger)
     {
         _logger = logger;
         _fetchDataService = new FetchDataService();
@@ -22,5 +22,4 @@ public class FourKeyMetricController : ControllerBase
     {
         _fetchDataService.FetchAllData();
     }
-
 }

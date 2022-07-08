@@ -1,7 +1,7 @@
 using MongoDB.Bson;
 using MongoDB.Driver;
 
-namespace FourKeyMetrics.Entities;
+namespace devops_metrics.Entities;
 
 public class Incident {
     public Incident(long startTime, long finishTimeTime, string? jiraTicket, string title, string repository, string project, string organization, string platform)

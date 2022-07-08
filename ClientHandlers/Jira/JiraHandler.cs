@@ -1,9 +1,7 @@
-using FourKeyMetrics.ClientHandlers.Azure.ClientModels;
-using FourKeyMetrics.ClientHandlers.Jira.ClientModels;
-using MongoDB.Bson;
+using devops_metrics.ClientHandlers.Jira.ClientModels;
 using Newtonsoft.Json;
 
-namespace  FourKeyMetrics.ClientHandlers.Azure;
+namespace devops_metrics.ClientHandlers.Jira;
 
 public class JiraHandler
 {

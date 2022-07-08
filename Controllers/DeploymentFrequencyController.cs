@@ -1,23 +1,18 @@
-using FourKeyMetrics.ClientHandlers.Azure.ClientModels;
-using FourKeyMetrics.Entities;
-using FourKeyMetrics.Models;
-using FourKeyMetrics.Service;
-using FourKeyMetrics.Services.FourKeyService;
+using devops_metrics.Models;
+using devops_metrics.Services.DevOpsMetricService;
 using Microsoft.AspNetCore.Mvc;
-using MongoDB.Driver;
-using Newtonsoft.Json;
 
-namespace FourKeyMetrics.Controllers;
+namespace devops_metrics.Controllers;
 
 [ApiController]
 [Route("[controller]")]
 
 public class DeploymentFrequencyController : ControllerBase
 {
-    private readonly ILogger<FourKeyMetricController> _logger;
+    private readonly ILogger<DeploymentFrequencyController> _logger;
     private readonly DeploymentFrequencyService _dfService;
     
-    public DeploymentFrequencyController(ILogger<FourKeyMetricController> logger)
+    public DeploymentFrequencyController(ILogger<DeploymentFrequencyController> logger)
     {
         _logger = logger;
         _dfService = new DeploymentFrequencyService();

@@ -1,11 +1,10 @@
 using System.Globalization;
-using FourKeyMetrics.Entities;
-using FourKeyMetrics.Models;
-using FourKeyMetrics.Service;
+using devops_metrics.Entities;
+using devops_metrics.Models;
 using MathNet.Numerics.Statistics;
 using MongoDB.Driver;
 
-namespace FourKeyMetrics.Services.FourKeyService;
+namespace devops_metrics.Services.DevOpsMetricService;
 
 public class ChangeBucket
 {

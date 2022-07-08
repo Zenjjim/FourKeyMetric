@@ -1,17 +1,10 @@
-using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Threading.Tasks;
-using FourKeyMetrics.Controllers;
-using FourKeyMetrics.Entities;
-using FourKeyMetrics.Models;
-using FourKeyMetrics.Service;
+using devops_metrics.Entities;
+using devops_metrics.Models;
 using MathNet.Numerics.Statistics;
 using MongoDB.Driver;
-using MongoDB.Driver.Linq;
 
-namespace FourKeyMetrics.Services.FourKeyService;
+namespace devops_metrics.Services.DevOpsMetricService;
 public class DeploymentBucket
 {
     public DeploymentBucket(int dayNumber, int weekNumber, int monthNumber, int yearNumber)

@@ -1,23 +1,18 @@
-using FourKeyMetrics.ClientHandlers.Azure.ClientModels;
-using FourKeyMetrics.Entities;
-using FourKeyMetrics.Models;
-using FourKeyMetrics.Service;
-using FourKeyMetrics.Services.FourKeyService;
+using devops_metrics.Models;
+using devops_metrics.Services.DevOpsMetricService;
 using Microsoft.AspNetCore.Mvc;
-using MongoDB.Driver;
-using Newtonsoft.Json;
 
-namespace FourKeyMetrics.Controllers;
+namespace devops_metrics.Controllers;
 
 [ApiController]
 [Route("[controller]")]
 
 public class LeadTimeChangeController : ControllerBase
 {
-    private readonly ILogger<FourKeyMetricController> _logger;
+    private readonly ILogger<LeadTimeChangeController> _logger;
     private readonly LeadTimeChangeService _ltcService;
     
-    public LeadTimeChangeController(ILogger<FourKeyMetricController> logger)
+    public LeadTimeChangeController(ILogger<LeadTimeChangeController> logger)
     {
         _logger = logger;
         _ltcService = new LeadTimeChangeService();
