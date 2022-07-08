@@ -66,32 +66,32 @@ namespace FourKeyMetrics.ClientHandlers.Azure.ClientModels
 
     public partial class Links
     {
-        [J("avatar", NullValueHandling = N.Ignore)] public Avatar Avatar { get; set; }
+        [J("avatar", NullValueHandling = N.Ignore)] public Avatar? Avatar { get; set; }
     }
 
     public partial class Avatar
     {
-        [J("href", NullValueHandling = N.Ignore)] public Uri Href { get; set; }
+        [J("href", NullValueHandling = N.Ignore)] public Uri? Href { get; set; }
     }
 
     public partial class LastMergeCommit
     {
-        [J("commitId", NullValueHandling = N.Ignore)] public string CommitId { get; set; }
-        [J("url", NullValueHandling = N.Ignore)]      public Uri Url { get; set; }        
+        [J("commitId", NullValueHandling = N.Ignore)] public string? CommitId { get; set; }
+        [J("url", NullValueHandling = N.Ignore)]      public Uri? Url { get; set; }        
     }
 
     public partial class Reviewer
     {
-        [J("reviewerUrl", NullValueHandling = N.Ignore)] public Uri ReviewerUrl { get; set; }   
+        [J("reviewerUrl", NullValueHandling = N.Ignore)] public Uri? ReviewerUrl { get; set; }   
         [J("vote", NullValueHandling = N.Ignore)]        public long? Vote { get; set; }        
         [J("hasDeclined", NullValueHandling = N.Ignore)] public bool? HasDeclined { get; set; } 
         [J("isFlagged", NullValueHandling = N.Ignore)]   public bool? IsFlagged { get; set; }   
-        [J("displayName", NullValueHandling = N.Ignore)] public string DisplayName { get; set; }
-        [J("url", NullValueHandling = N.Ignore)]         public Uri Url { get; set; }           
-        [J("_links", NullValueHandling = N.Ignore)]      public Links Links { get; set; }       
+        [J("displayName", NullValueHandling = N.Ignore)] public string? DisplayName { get; set; }
+        [J("url", NullValueHandling = N.Ignore)]         public Uri? Url { get; set; }           
+        [J("_links", NullValueHandling = N.Ignore)]      public Links? Links { get; set; }       
         [J("id", NullValueHandling = N.Ignore)]          public Guid? Id { get; set; }          
-        [J("uniqueName", NullValueHandling = N.Ignore)]  public string UniqueName { get; set; } 
-        [J("imageUrl", NullValueHandling = N.Ignore)]    public Uri ImageUrl { get; set; }      
+        [J("uniqueName", NullValueHandling = N.Ignore)]  public string? UniqueName { get; set; } 
+        [J("imageUrl", NullValueHandling = N.Ignore)]    public Uri? ImageUrl { get; set; }      
         [J("isRequired", NullValueHandling = N.Ignore)]  public bool? IsRequired { get; set; }  
     }
 }

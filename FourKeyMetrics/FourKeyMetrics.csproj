@@ -21,17 +21,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Remove="Models\**" />
     <EmbeddedResource Remove="ClientHandlers\Models\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="Models\**" />
     <None Remove="ClientHandlers\Models\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Remove="Models\**" />
     <Content Remove="ClientHandlers\Models\**" />
   </ItemGroup>
 

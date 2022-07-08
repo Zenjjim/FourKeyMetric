@@ -33,6 +33,7 @@ public class DeploymentService
 
     public async Task<IAsyncCursor<Deployment>> GetDeployments(int intervalMonths, string? organization, string? project, string? repository)
     {;
+        var a = DateTimeOffset.Now.AddMonths(intervalMonths).ToUnixTimeSeconds();
         var filter = Builders<Deployment>.Filter.Gte("StartTime", DateTimeOffset.Now.AddMonths(intervalMonths).ToUnixTimeSeconds());
         if (organization != null)
         {

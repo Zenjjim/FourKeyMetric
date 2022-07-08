@@ -37,18 +37,10 @@ public class Deployment
     public String Platform { get; set;}
 
 
-    public DateTime GetStartDateTime()
-    {
-        return new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc).AddSeconds(this.StartTime).ToLocalTime();
-    }    
-    public DateTime GetFinishDateTime()
-    {
-        return new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc).AddSeconds(this.FinishTime).ToLocalTime();
-    }
-    public int GetWeek()
-    {
-        return DateTimeFormatInfo.CurrentInfo.Calendar.GetWeekOfYear(this.GetStartDateTime(), CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday);
-    }
+    public DateTime GetStartDateTime() => new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc).AddSeconds(this.StartTime).ToLocalTime();
+
+    public DateTime GetFinishDateTime() => new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc).AddSeconds(this.FinishTime).ToLocalTime();
+    public int GetWeek() => DateTimeFormatInfo.CurrentInfo.Calendar.GetWeekOfYear(this.GetStartDateTime(), CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday);
 }
 public static class DeploymentDb
 {
