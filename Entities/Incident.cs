@@ -1,3 +1,4 @@
+using System.Globalization;
 using MongoDB.Bson;
 using MongoDB.Driver;
 
@@ -35,6 +36,11 @@ public class Incident {
 
     public String Platform { get; set;}
     
+    public double Delta() => this.FinishTime - this.StartTime;
+    public DateTime GetStartDateTime() => new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc).AddSeconds(this.StartTime).ToLocalTime();
+    public DateTime GetFinishDateTime() => new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc).AddSeconds(this.FinishTime).ToLocalTime();
+    public int GetWeek() => DateTimeFormatInfo.CurrentInfo.Calendar.GetWeekOfYear(this.GetStartDateTime(), CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday);
+
 }
 
 public static class IncidentDb

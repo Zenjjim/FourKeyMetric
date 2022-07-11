@@ -22,7 +22,7 @@ public class ChangeBucket
     public int MonthNumber { get; set; }
     public int YearNumber { get; set; }
     public List<Change> ChangesInBucket { get; set; }
-    public IEnumerable<double> GetLeadChangeTime() => this.ChangesInBucket.Select(dW => dW.Delta());
+    public IEnumerable<double> GetLeadChangeTime() => this.ChangesInBucket.Select(CB => CB.Delta());
 }
 
 public class LeadTimeChangeService
@@ -36,7 +36,7 @@ public class LeadTimeChangeService
         _changeService = new ChangeService();
     }
     
-    public List<ChangeBucket> GetBuckets(int intervalMonths, List<Change> changes)
+    private List<ChangeBucket> GetBuckets(int intervalMonths, List<Change> changes)
     {
         
         List<ChangeBucket> changeBucket = new List<ChangeBucket>();
