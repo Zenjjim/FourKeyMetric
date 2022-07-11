@@ -14,7 +14,7 @@ public class LeadTimeChangeModel
     }
 
     public double MedianLeadTimeChange { get; set; }
-    public dynamic WeeklyLeadTimeChange { get; set; }
-    public dynamic MonthlyLeadTimeChange { get; set; }
+    public Weekly WeeklyLeadTimeChange { get; set; }
+    public Monthly MonthlyLeadTimeChange { get; set; }
     public List<Change> Changes { get; set; }
 }

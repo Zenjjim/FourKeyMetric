@@ -65,7 +65,7 @@ public class LeadTimeChangeService
         var changesList = await changes.ToListAsync();
         var changesBucket = GetBuckets(intervalMonths, changesList);
         var total = changesBucket.Select(i => i.GetLeadChangeTime()).SelectMany(a => a).Median();
-        var weekly = changesBucket.GroupBy(bucket => new { bucket.WeekNumber, bucket.YearNumber })
+        var weekly = changesBucket.GroupBy(bucket => new { bucket.WeekNumber, bucket.YearNumber, bucket.MonthNumber})
             .Select(week => new {
                 week.Key,
                 Median = week.Select(day => day.GetLeadChangeTime()).SelectMany(day => day).Median()

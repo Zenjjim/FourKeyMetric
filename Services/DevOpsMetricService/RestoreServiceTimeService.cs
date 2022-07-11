@@ -36,8 +36,8 @@ public class RestoreServiceTimeService
         _deploymentService = new DeploymentService();
         _incidentService = new IncidentService();
     }
-    
-    private List<IncidentBucket> GetBuckets(int intervalMonths, List<Incident> incidents)
+
+    private List<IncidentBucket> GetBuckets(List<Incident> incidents)
     {
         
         List<IncidentBucket> incidentBucket = new List<IncidentBucket>();
@@ -64,9 +64,9 @@ public class RestoreServiceTimeService
     {
         var incidents = await _incidentService.GetIncidents(intervalMonths, organization, project, repository);
         var incidentsList = await incidents.ToListAsync();
-        var incidentsBucket = GetBuckets(intervalMonths, incidentsList);
+        var incidentsBucket = GetBuckets(incidentsList);
         var total = incidentsBucket.Select(i => i.GetLeadChangeTime()).SelectMany(a => a).Median();
-        var weekly = incidentsBucket.GroupBy(bucket => new { bucket.WeekNumber, bucket.YearNumber })
+        var weekly = incidentsBucket.GroupBy(bucket => new { bucket.WeekNumber, bucket.YearNumber, bucket.MonthNumber })
             .Select(week => new {
                 week.Key,
                 Median = week.Select(day => day.GetLeadChangeTime()).SelectMany(day => day).Median()

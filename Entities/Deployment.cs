@@ -36,6 +36,7 @@ public class Deployment
 
     public String Platform { get; set;}
 
+    public bool? isFailure;
 
     public DateTime GetStartDateTime() => new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc).AddSeconds(this.StartTime).ToLocalTime();
 
