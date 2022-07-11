@@ -38,11 +38,11 @@ public class FetchDataService
 
         foreach (var config in configs)
         {
-            GetAzureData(config.Platform, config.Organization);
+            GetAzureData(config.Platform, config.Organization, config.Jira);
         }
     }
 
-    private void GetAzureData(String platform, String organization)
+    private void GetAzureData(String platform, String organization, String jira)
     {
         var deployments = new List<Deployment>();
         var changes = new List<Change>();
@@ -110,7 +110,7 @@ public class FetchDataService
                             string? jiraTicketKey = null;
                             try
                             {
-                                var jiraTicket = _jira.GetTicket(pullRequest.Title.Split(" ").First()).Result;
+                                var jiraTicket = _jira.GetTicket(jira, pullRequest.Title.Split(" ").First()).Result;
                                 startTime = jiraTicket.Fields.Created.ToUnixTimeSeconds();
                                 jiraTicketKey = jiraTicket.Key;
                             }

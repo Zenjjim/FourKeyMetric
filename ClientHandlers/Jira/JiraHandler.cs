@@ -13,10 +13,10 @@ public class JiraHandler
         _client.DefaultRequestHeaders.Add("Authorization", $"Basic {token}");
     }
 
-    public async Task<JiraTicketModel> GetTicket(String jiraTicket)
+    public async Task<JiraTicketModel> GetTicket(String jira, String jiraTicket)
     {
         String path =
-            $"https://mollermobilitygroup.atlassian.net/rest/api/3/issue/{jiraTicket}";
+            $"https://{jira}.atlassian.net/rest/api/3/issue/{jiraTicket}";
         var response = await _client.GetAsync(path);
         response.EnsureSuccessStatusCode();
         var ticketDataRaw = response.Content.ReadAsStringAsync();
