@@ -18,4 +18,4 @@ COPY --from=build-env /app/out .
 #opt out of the diagnostic pipeline
 ENV DOTNET_EnableDiagnostics=0
 ENV APPLICATION_LEVEL=API
-ENTRYPOINT ["dotnet", "FourKeyMetrics.dll"]
+ENTRYPOINT ["dotnet", "devops_metrics.dll"]

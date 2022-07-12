@@ -1,5 +1,6 @@
 trigger:
   - main
+  - feat/pipelines
 
 stages:
   - stage: container
