@@ -16,7 +16,7 @@ def main():
     env_path = Path('..', '.env')
     load_dotenv(dotenv_path=env_path)
     global CONFIG
-    if True:
+    if False:
         CONFIG = {
             'branch': "refs/heads/master",
             'repo_id': 65,
@@ -30,13 +30,15 @@ def main():
         }
     else:
         CONFIG = {
-            'branch': "refs/heads/main",
-            'repo_id': 82,
-            'repo_name': 'workshop-booking',
+            'branch': "refs/heads/master",
+            'repo_id': 65,
+            'repo_name': 'car-care-web',
             'project': "mollerdigital/carcare",
             'json': None,
             'token': os.environ["AZURE_TOKEN"],
-            'back_track_months': 3
+            'back_track_months': 3,
+            'jira_project': 'mollermobilitygroup',
+            'jira_token': os.environ["JIRA_TOKEN"]
         }
     
     size = 1
@@ -50,6 +52,8 @@ def main():
 
     # GET DATA
     build_data = get_data(get_build_url(CONFIG['project'], CONFIG['repo_id'], CONFIG['branch']), CONFIG['token'], CONFIG['json'])
+    print(get_build_url(CONFIG['project'], CONFIG['repo_id'], CONFIG['branch']), CONFIG['token'], CONFIG['json'])
+    build_data = pd.DataFrame(build_data["value"])
 
     build_data["queueTime"] = pd.to_datetime(build_data['queueTime']).dt.tz_localize(None)
     build_data["startTime"] = pd.to_datetime(build_data['startTime']).dt.tz_localize(None)
