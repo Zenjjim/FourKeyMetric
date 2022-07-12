@@ -29,7 +29,7 @@ public class DeploymentFrequencyService
 
     public DeploymentFrequencyService() => _deploymentService = new DeploymentService();
 
-    private async Task<List<DeploymentBucket>> GetBuckets(int intervalMonths,  IAsyncCursor<Deployment> deployments)
+    public async Task<List<DeploymentBucket>> GetBuckets(int intervalMonths,  IAsyncCursor<Deployment> deployments)
     {
         DateTime intervalDate = DateTime.Now.AddMonths(intervalMonths);
         
