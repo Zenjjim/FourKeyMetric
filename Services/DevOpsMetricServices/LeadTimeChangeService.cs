@@ -4,7 +4,7 @@ using devops_metrics.Models;
 using MathNet.Numerics.Statistics;
 using MongoDB.Driver;
 
-namespace devops_metrics.Services.DevOpsMetricService;
+namespace devops_metrics.Services.DevOpsMetricServices;
 
 public class ChangeBucket
 {

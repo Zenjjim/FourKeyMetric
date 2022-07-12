@@ -1,6 +1,6 @@
 
 using devops_metrics.Models;
-using devops_metrics.Services.DevOpsMetricService;
+using devops_metrics.Services.DevOpsMetricServices;
 using Microsoft.AspNetCore.Mvc;
 
 namespace devops_metrics.Controllers;

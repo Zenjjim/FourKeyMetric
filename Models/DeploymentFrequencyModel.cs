@@ -1,5 +1,5 @@
 
-using devops_metrics.Services.DevOpsMetricService;
+using devops_metrics.Services.DevOpsMetricServices;
 
 namespace devops_metrics.Models;
 
