@@ -39,6 +39,6 @@ stages:
               scriptLocation: inlineScript
               inlineScript: |
                 az webapp config container set \
-                --name weu-dev-devops-metric-api-app \
-                --resource-group weu-dev-devops-metric-rg \
+                --name weu-dev-metric-app \
+                --resource-group weu-dev-metric-rg \
                 --docker-custom-image-name moller.azurecr.io/summer22/devops-metric:$(Build.BuildNumber)
