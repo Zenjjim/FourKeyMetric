@@ -1,4 +1,5 @@
-using Itenso.TimePeriod;
+using WorkTimeCalculatorLib;
+using WorkTimeCalculatorLib.Models;
 
 static class Utils
 {
