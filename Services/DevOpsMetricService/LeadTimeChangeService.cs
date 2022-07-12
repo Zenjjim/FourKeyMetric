@@ -64,17 +64,42 @@ public class LeadTimeChangeService
         var changes = await _changeService.GetChanges(intervalMonths, organization, project, repository);
         var changesList = await changes.ToListAsync();
         var changesBucket = GetBuckets(intervalMonths, changesList);
-        var total = changesBucket.Select(i => i.GetLeadChangeTime()).SelectMany(a => a).Median();
+        var total = changesBucket.Select(day => day.GetLeadChangeTime()).SelectMany(day => day).Where(b => b != 0)
+                .Median();
+        total = double.IsNaN(total) ? 0 : total;
         var weekly = changesBucket.GroupBy(bucket => new { bucket.WeekNumber, bucket.YearNumber, bucket.MonthNumber})
-            .Select(week => new Weekly{
-                Key = new WeekKey{WeekNumber = week.Key.WeekNumber, MonthNumber = week.Key.MonthNumber, YearNumber = week.Key.YearNumber},
-                Median = week.Select(day => day.GetLeadChangeTime()).SelectMany(day => day).Median()
+            .Select(week =>
+            {
+                var med = week.Select(day => day.GetLeadChangeTime()).SelectMany(day => day)
+                    .Where(b => b != 0).Median();
+                return new Weekly
+                {
+                    Key = new WeekKey
+                    {
+                        WeekNumber = week.Key.WeekNumber, MonthNumber = week.Key.MonthNumber,
+                        YearNumber = week.Key.YearNumber
+                    },
+                    Median =
+                        double.IsNaN(med)
+                            ? null
+                            : med
+                };
             });        
         var monthly = changesBucket.GroupBy(bucket => new { bucket.MonthNumber, bucket.YearNumber })
-            .Select(month => new Monthly{
-                Key = new MonthKey{MonthNumber = month.Key.MonthNumber, YearNumber = month.Key.YearNumber},
-                Median = month.Select(day => day.GetLeadChangeTime()).SelectMany(day => day).Median()
-            });
+            .Select(month =>
+            {
+                var med = month.Select(day => day.GetLeadChangeTime()).SelectMany(day => day).Where(b => b != 0)
+                    .Median();
+                return new Monthly
+                {
+                    Key = new MonthKey { MonthNumber = month.Key.MonthNumber, YearNumber = month.Key.YearNumber },
+                    Median = double.IsNaN(med)
+                        ? null
+                        : med
+                };
+            
+
+    });
         
         return new LeadTimeChangeModel(total, weekly, monthly, changesList);
     }

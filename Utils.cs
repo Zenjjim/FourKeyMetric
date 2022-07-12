@@ -1,26 +1,26 @@
+using Itenso.TimePeriod;
+
 static class Utils
 {
-    public static double GetSecondsInRange(DateTime from, DateTime to)
+    public static double CalculateBusinessHours( DateTime startDate, DateTime finishDate )
     {
-        TimeSpan rangeStart = new TimeSpan(7, 0, 0);
-        TimeSpan rangeEnd = new TimeSpan(17, 0, 0);
-        double minutes = 0.0;
-        bool overnight = rangeStart > rangeEnd;
-        for (var m = from; m < to; m = m.AddMinutes(1)) {
-            if (overnight) {
-                if (rangeStart <= m.TimeOfDay || m.TimeOfDay < rangeEnd) {
-                    minutes++;
-                }
-            } else {
-                if (rangeStart <= m.TimeOfDay) {
-                    if (m.TimeOfDay < rangeEnd) {
-                        minutes++;
-                    } else {
-                        break;
-                    }
-                }
-            }
+        CalendarTimeRange period = new CalendarTimeRange(startDate, finishDate);
+        CalendarPeriodCollectorFilter filter = new CalendarPeriodCollectorFilter();
+        filter.AddWorkingWeekDays(); // only working days
+        filter.CollectingHours.Add( new HourRange( 7, 17 ) );  // opening hours morning
+ 
+        CalendarPeriodCollector collector = new CalendarPeriodCollector( 
+            filter, period );
+        collector.CollectHours();
+ 
+        double businessHours = 0.0;
+        foreach ( var timePeriod in collector.Periods )
+        {
+            var IPeriod = (ICalendarTimeRange)timePeriod;
+            businessHours += Math.Round( IPeriod.Duration.TotalHours, 2 );
         }
-        return minutes*60.0;
+        return businessHours;
     }
+    
+    
 }

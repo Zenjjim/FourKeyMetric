@@ -36,11 +36,12 @@ public class Incident {
 
     public String Platform { get; set;}
     
-    public double Delta() => this.FinishTime - this.StartTime;
     public DateTime GetStartDateTime() => new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc).AddSeconds(this.StartTime).ToLocalTime();
     public DateTime GetFinishDateTime() => new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc).AddSeconds(this.FinishTime).ToLocalTime();
     public int GetWeek(bool isStartTime = true) => DateTimeFormatInfo.CurrentInfo.Calendar.GetWeekOfYear(isStartTime ? this.GetStartDateTime() : this.GetFinishDateTime(), CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday);
-
+    public double Delta() {
+        return Utils.CalculateBusinessHours(this.GetStartDateTime(), this.GetFinishDateTime());
+    }
 }
 
 public static class IncidentDb
