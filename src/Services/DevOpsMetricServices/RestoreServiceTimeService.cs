@@ -62,8 +62,7 @@ public class RestoreServiceTimeService
 
     public async Task<RestoreServiceTimeModel> Calculate(int intervalMonths, string? organization, string? project, string? repository)
     {
-        var incidents = await _incidentService.GetIncidents(intervalMonths, organization, project, repository);
-        var incidentsList = await incidents.ToListAsync();
+        var incidentsList = await _incidentService.GetIncidents(intervalMonths, organization, project, repository);
         var incidentsBucket = GetBuckets(incidentsList);
         var total = incidentsBucket.Select(i => i.GetLeadChangeTime()).SelectMany(a => a).Where(b => b != 0).Median();
         total = double.IsNaN(total) ? 0 : total;

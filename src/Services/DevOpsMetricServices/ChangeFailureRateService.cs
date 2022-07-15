@@ -66,13 +66,22 @@ public class ChangeFailureRateService
             this.deployment = deployment;
         }
     }
+
+    private async Task<List<Deployment>> GetDeploymentData(int intervalMonths, string? organization, string? project, string? repository)
+    {
+        return await _deploymentService.GetDeployments(intervalMonths, organization, project, repository);
+    }
+
+    private async Task<List<Incident>> GetIncidentData(int intervalMonths, string? organization, string? project, string? repository)
+    {
+        return await _incidentService.GetIncidents(intervalMonths, organization, project, repository);
+        
+    }
     
     public async Task<ChangeFailureRateModel> Calculate(int intervalMonths, string? organization, string? project, string? repository)
     {
-        var incidents = await _incidentService.GetIncidents(intervalMonths, organization, project, repository);
-        var incidentsList = await incidents.ToListAsync();
-        var deployments = await _deploymentService.GetDeployments(intervalMonths, organization, project, repository);
-        var deploymentList = await deployments.ToListAsync();
+        var deploymentList = await GetDeploymentData(intervalMonths, organization, project, repository);
+        var incidentsList = await GetIncidentData(intervalMonths, organization, project, repository);
         var deploymentsWithFailure = deploymentList.Select(deployment => new FailureDeployment(deployment)).ToList();
     
         incidentsList.ForEach(incident =>

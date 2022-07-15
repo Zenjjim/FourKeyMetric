@@ -61,8 +61,7 @@ public class LeadTimeChangeService
 
     public async Task<LeadTimeChangeModel> Calculate(int intervalMonths, string? organization, string? project, string? repository)
     {
-        var changes = await _changeService.GetChanges(intervalMonths, organization, project, repository);
-        var changesList = await changes.ToListAsync();
+        var changesList = await _changeService.GetChanges(intervalMonths, organization, project, repository);
         var changesBucket = GetBuckets(intervalMonths, changesList);
         var total = changesBucket.Select(day => day.GetLeadChangeTime()).SelectMany(day => day).Where(b => b != 0)
                 .Median();

@@ -27,9 +27,8 @@ public class DeploymentService
         catch (MongoBulkWriteException){}
     }
 
-    public async Task<IAsyncCursor<Deployment>> GetDeployments(int intervalMonths, string? organization, string? project, string? repository)
+    public async Task<List<Deployment>> GetDeployments(int intervalMonths, string? organization, string? project, string? repository)
     {;
-        var a = DateTimeOffset.Now.AddMonths(intervalMonths).ToUnixTimeSeconds();
         var filter = Builders<Deployment>.Filter.Gte("StartTime", DateTimeOffset.Now.AddMonths(intervalMonths).ToUnixTimeSeconds());
         if (organization != null)
         {
@@ -49,7 +48,7 @@ public class DeploymentService
             filter &= filterRepository;
         }
         
-        return await _deployments.FindAsync(filter);
+        return await _deployments.FindAsync(filter).Result.ToListAsync();
         
     }
 }

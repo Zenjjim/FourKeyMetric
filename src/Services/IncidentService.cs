@@ -1,24 +1,22 @@
-
-
 using devops_metrics.Entities;
 using MongoDB.Driver;
 
 namespace devops_metrics.Services;
 
-public class ChangeService
+public class IncidentService
 {
-    private readonly IMongoCollection<Change> _changes;
-    public ChangeService()
+    private readonly IMongoCollection<Incident> _incidents;
+    public IncidentService()
     {
-        _changes = ChangeDb.Open();
+        _incidents = IncidentDb.Open();
     }
     
-    public void InsertAllChangeData(List<Change> changes)
+    public void InsertAllIncidentData(List<Incident> incidents)
     {
 
         try
         {
-            _changes.InsertMany(changes, new InsertManyOptions
+            _incidents.InsertMany(incidents, new InsertManyOptions
             {
                 IsOrdered = false
             });
@@ -26,9 +24,9 @@ public class ChangeService
         catch (MongoBulkWriteException){}
     } 
     
-    public async Task<IAsyncCursor<Change>> GetChanges(int intervalMonths, string? organization, string? project, string? repository)
+    public async Task<List<Incident>> GetIncidents(int intervalMonths, string? organization, string? project, string? repository)
     {;
-        var builder = Builders<Change>.Filter;
+        var builder = Builders<Incident>.Filter;
         var filter = builder.Gte("StartTime", DateTimeOffset.Now.AddMonths(intervalMonths).ToUnixTimeSeconds());
         if (organization != null)
         {
@@ -49,7 +47,7 @@ public class ChangeService
         }
         
         
-        return await _changes.FindAsync(filter);
+        return await _incidents.FindAsync(filter).Result.ToListAsync();
         
     }
 }
