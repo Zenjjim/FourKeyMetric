@@ -27,15 +27,6 @@ public class ChangeBucket
 
 public class LeadTimeChangeService
 {
-    private readonly DeploymentService _deploymentService;
-    private readonly ChangeService _changeService;
-
-    public LeadTimeChangeService()
-    {
-        _deploymentService = new DeploymentService();
-        _changeService = new ChangeService();
-    }
-    
     private List<ChangeBucket> GetBuckets(int intervalMonths, List<Change> changes)
     {
         
@@ -61,10 +52,15 @@ public class LeadTimeChangeService
 
     public async Task<LeadTimeChangeModel> Calculate(int intervalMonths, string? organization, string? project, string? repository)
     {
-        var changesList = await _changeService.GetChanges(intervalMonths, organization, project, repository);
+        var changesList = await new ChangeService().GetChanges(intervalMonths, organization, project, repository);
+        return CalculateBuckets(intervalMonths, changesList);
+    }
+
+    public LeadTimeChangeModel CalculateBuckets(int intervalMonths, List<Change> changesList)
+    {
         var changesBucket = GetBuckets(intervalMonths, changesList);
         var total = changesBucket.Select(day => day.GetLeadChangeTime()).SelectMany(day => day).Where(b => b != 0)
-                .Median();
+            .Median();
         total = double.IsNaN(total) ? 0 : total;
         var weekly = changesBucket.GroupBy(bucket => new { bucket.WeekNumber, bucket.YearNumber, bucket.MonthNumber})
             .Select(week =>
@@ -98,7 +94,7 @@ public class LeadTimeChangeService
                 };
             
 
-    });
+            });
         
         return new LeadTimeChangeModel(total, weekly, monthly, changesList);
     }

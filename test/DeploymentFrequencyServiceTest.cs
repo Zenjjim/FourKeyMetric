@@ -21,7 +21,7 @@ public class DeploymentFrequencyServiceTest
         Assert.True(bucket.DailyMedian is double);
         Assert.True(bucket.WeeklyMedian is double);
         Assert.True(bucket.MonthlyMedian is double);
-        Assert.True(bucket.WeeklyDeployments is List<DeploymentBucket>);
+        Assert.True(bucket.Deployments is List<DeploymentBucket>);
     }
 
     [Theory]
@@ -99,13 +99,13 @@ public class DeploymentFrequencyServiceTest
         {
             Factory.DeploymentFactory(startDate:DateTime.Now.AddDays(-4), finishDate:DateTime.Now.AddDays(-1)),
         });
-        bucket.WeeklyDeployments.ForEach(week => week.DeploymentsInBucket.ForEach(deployment =>
+        bucket.Deployments.ForEach(deploymentBucket => deploymentBucket.DeploymentsInBucket.ForEach(deployment =>
         {
             var startDate = deployment.GetStartDateTime();
-            Assert.Equal(week.DayNumber, startDate.Date.Day);
-            Assert.Equal(week.WeekNumber, deployment.GetWeek());
-            Assert.Equal(week.MonthNumber, startDate.Date.Month);
-            Assert.Equal(week.YearNumber, startDate.Date.Year);
+            Assert.Equal(deploymentBucket.DayNumber, startDate.Date.Day);
+            Assert.Equal(deploymentBucket.WeekNumber, deployment.GetWeek());
+            Assert.Equal(deploymentBucket.MonthNumber, startDate.Date.Month);
+            Assert.Equal(deploymentBucket.YearNumber, startDate.Date.Year);
         }));
     }
     
