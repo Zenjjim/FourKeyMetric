@@ -2,10 +2,10 @@ using devops_metrics.Entities;
 using devops_metrics.Services.DevOpsMetricServices;
 
 namespace devops_metrics.test;
-public class DeploymentFrequencyServiceTest
+public class DeploymentFrequencyTest
 {
     private DeploymentFrequencyService dfService;
-    public DeploymentFrequencyServiceTest()
+    public DeploymentFrequencyTest()
     {
         dfService = new DeploymentFrequencyService();
     }

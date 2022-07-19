@@ -5,7 +5,7 @@ namespace devops_metrics.Models;
 
 public class ChangeFailureRateModel
 {
-    public ChangeFailureRateModel(double changeFailureRate, IEnumerable<cfrDay> changeFailureRateByDay, IEnumerable<cfrWeek> changeFailureRateByWeek, IEnumerable<cfrMonth> changeFailureRateByMonth)
+    public ChangeFailureRateModel(double changeFailureRate, IEnumerable<ChangeFailureRateDay> changeFailureRateByDay, IEnumerable<ChangeFailureRateWeek> changeFailureRateByWeek, IEnumerable<ChangeFailureRateMonth> changeFailureRateByMonth)
     {
         ChangeFailureRate = changeFailureRate;
         ChangeFailureRateByDay = changeFailureRateByDay;
@@ -14,22 +14,22 @@ public class ChangeFailureRateModel
     }
 
     public double ChangeFailureRate{ get; set; }
-    public IEnumerable<cfrDay> ChangeFailureRateByDay{ get; set; }
-    public IEnumerable<cfrWeek> ChangeFailureRateByWeek{ get; set; }
-    public IEnumerable<cfrMonth> ChangeFailureRateByMonth{ get; set; }
+    public IEnumerable<ChangeFailureRateDay> ChangeFailureRateByDay{ get; set; }
+    public IEnumerable<ChangeFailureRateWeek> ChangeFailureRateByWeek{ get; set; }
+    public IEnumerable<ChangeFailureRateMonth> ChangeFailureRateByMonth{ get; set; }
 }
 
-public class cfrDay
+public class ChangeFailureRateDay
 {
     public DayKey Key { get; set; }
     public double ChangeFailureRate { get; set; }  
 }
-public class cfrWeek
+public class ChangeFailureRateWeek
 {
     public WeekKey Key { get; set; }
     public double ChangeFailureRate { get; set; }  
 }
-public class cfrMonth
+public class ChangeFailureRateMonth
 {
     public MonthKey Key { get; set; }
     public double ChangeFailureRate { get; set; }  

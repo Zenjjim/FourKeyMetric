@@ -31,5 +31,17 @@ class Factory
         string? platform = null)
     {
         return new Change(new DateTimeOffset(startDate).ToUnixTimeSeconds(), new DateTimeOffset(finishDate).ToUnixTimeSeconds(), (long)(prSize ?? Random.Shared.NextInt64()), (long)(nrOfCommits ?? Random.Shared.NextInt64()),  pullRequestId, branch, repository, project, organization, developer, platform);
+    }    
+    public static Incident IncidentFactory(
+        DateTime startDate = default,
+        DateTime finishDate = default,
+        string? jira = null,
+        string? title = null,
+        string? repository = null,
+        string? project = null,
+        string? organization = null,
+        string? platform = null)
+    {
+        return new Incident(new DateTimeOffset(startDate).ToUnixTimeSeconds(), new DateTimeOffset(finishDate).ToUnixTimeSeconds(), jira, title, repository, project, organization, platform);
     }
 }

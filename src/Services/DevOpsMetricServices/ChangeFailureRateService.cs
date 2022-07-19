@@ -8,14 +8,6 @@ namespace devops_metrics.Services.DevOpsMetricServices;
 
 public class ChangeFailureRateService
 {
-    private readonly DeploymentService _deploymentService;
-    private readonly IncidentService _incidentService;
-
-    public ChangeFailureRateService()
-    {
-        _deploymentService = new DeploymentService();
-        _incidentService = new IncidentService();
-    }
     public class FailureDeploymentBucket
     {
         public FailureDeploymentBucket(int dayNumber, int weekNumber, int monthNumber, int yearNumber)
@@ -67,22 +59,16 @@ public class ChangeFailureRateService
         }
     }
 
-    private async Task<List<Deployment>> GetDeploymentData(int intervalMonths, string? organization, string? project, string? repository)
-    {
-        return await _deploymentService.GetDeployments(intervalMonths, organization, project, repository);
-    }
-
-    private async Task<List<Incident>> GetIncidentData(int intervalMonths, string? organization, string? project, string? repository)
-    {
-        return await _incidentService.GetIncidents(intervalMonths, organization, project, repository);
-        
-    }
-    
     public async Task<ChangeFailureRateModel> Calculate(int intervalMonths, string? organization, string? project, string? repository)
     {
-        var deploymentList = await GetDeploymentData(intervalMonths, organization, project, repository);
-        var incidentsList = await GetIncidentData(intervalMonths, organization, project, repository);
-        var deploymentsWithFailure = deploymentList.Select(deployment => new FailureDeployment(deployment)).ToList();
+        var deploymentList = await new DeploymentService().GetDeployments(intervalMonths, organization, project, repository);
+        var incidentsList = await new IncidentService().GetIncidents(intervalMonths, organization, project, repository);
+        return CalculateBuckets(deploymentList, incidentsList);
+    }
+
+    public ChangeFailureRateModel CalculateBuckets(List<Deployment> deploymentList, List<Incident> incidentsList)
+    {
+         var deploymentsWithFailure = deploymentList.Select(deployment => new FailureDeployment(deployment)).ToList();
     
         incidentsList.ForEach(incident =>
         {
@@ -106,15 +92,15 @@ public class ChangeFailureRateService
         double failCount =  deploymentsWithFailure.FindAll(x => x.IsFailure).Count;
         double totalCount = deploymentsWithFailure.Count;
         
-        var cfrDay  = deploymentBuckets.Select(deploymentBucket =>
+        var changeFailureRateDay  = deploymentBuckets.Select(deploymentBucket =>
         {
             var numberOfFailures = deploymentBucket.DeploymentsInBucket.FindAll(deployment => deployment.IsFailure == true)?.Count ?? 0;
-            return new cfrDay{
+            return new ChangeFailureRateDay{
                 Key = new DayKey{DayNumber = deploymentBucket.DayNumber, WeekNumber = deploymentBucket.WeekNumber, MonthNumber = deploymentBucket.MonthNumber, YearNumber = deploymentBucket.YearNumber},
                 ChangeFailureRate = numberOfFailures / deploymentBucket.GetDeploymentDays()
             };
         });
-        var cfrWeek = deploymentBuckets.GroupBy(bucket => new { bucket.WeekNumber, bucket.MonthNumber, bucket.YearNumber })
+        var changeFailureRateWeek = deploymentBuckets.GroupBy(bucket => new { bucket.WeekNumber, bucket.MonthNumber, bucket.YearNumber })
             .Select(week => new
             {
                 week.Key,
@@ -123,12 +109,12 @@ public class ChangeFailureRateService
             {
                 double numberOfFailures =
                     weekBucket.deployments.Select(day => day.FindAll(i => i.IsFailure == true).Count).Sum();
-                return new cfrWeek{
+                return new ChangeFailureRateWeek{
                     Key = new WeekKey{WeekNumber = weekBucket.Key.WeekNumber, MonthNumber = weekBucket.Key.MonthNumber, YearNumber = weekBucket.Key.YearNumber},
                     ChangeFailureRate = numberOfFailures / weekBucket.deployments.Select(day => day.Count).Sum()
                 };
             });
-        var cfrMonth = deploymentBuckets.GroupBy(bucket => new { bucket.MonthNumber, bucket.YearNumber })
+        var changeFailureRateMonth = deploymentBuckets.GroupBy(bucket => new { bucket.MonthNumber, bucket.YearNumber })
             .Select(month => new
             {
                 month.Key,
@@ -138,13 +124,13 @@ public class ChangeFailureRateService
                 double numberOfFailures =
                     monthBucket.deployments.Select(day => day.FindAll(i => i.IsFailure == true).Count).Sum();
 
-                return new cfrMonth{
+                return new ChangeFailureRateMonth{
                     Key = new MonthKey{MonthNumber = monthBucket.Key.MonthNumber, YearNumber = monthBucket.Key.YearNumber},
                     ChangeFailureRate = numberOfFailures / monthBucket.deployments.Select(day => day.Count).Sum()
                 };
             });
          
         
-        return new ChangeFailureRateModel(failCount/totalCount, cfrDay, cfrWeek, cfrMonth);
+        return new ChangeFailureRateModel(failCount/totalCount, changeFailureRateDay, changeFailureRateWeek, changeFailureRateMonth);
     }
 }
