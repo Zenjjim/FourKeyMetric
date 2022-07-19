@@ -16,7 +16,7 @@ public class RestoreServiceTimeModel
     public double MedianRestoreServiceTime { get; set; }
     public IEnumerable<Weekly> WeeklyRestoreServiceTime { get; set; }
     public IEnumerable<Monthly> MonthlyRestoreServiceTime { get; set; }
-    public List<Incident> Incidents { get; set; }
+    public List<Incident> Incidents { get; set; } 
 }
 
 

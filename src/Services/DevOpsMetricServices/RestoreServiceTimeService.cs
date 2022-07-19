@@ -28,15 +28,6 @@ public class IncidentBucket
 
 public class RestoreServiceTimeService
 {
-    private readonly DeploymentService _deploymentService;
-    private readonly IncidentService _incidentService;
-
-    public RestoreServiceTimeService()
-    {
-        _deploymentService = new DeploymentService();
-        _incidentService = new IncidentService();
-    }
-
     private List<IncidentBucket> GetBuckets(List<Incident> incidents)
     {
         
@@ -62,7 +53,12 @@ public class RestoreServiceTimeService
 
     public async Task<RestoreServiceTimeModel> Calculate(int intervalMonths, string? organization, string? project, string? repository)
     {
-        var incidentsList = await _incidentService.GetIncidents(intervalMonths, organization, project, repository);
+        var incidentsList = await new IncidentService().GetIncidents(intervalMonths, organization, project, repository);
+        return CalculateBuckets(incidentsList);
+    }
+
+    public RestoreServiceTimeModel CalculateBuckets(List<Incident> incidentsList)
+    {
         var incidentsBucket = GetBuckets(incidentsList);
         var total = incidentsBucket.Select(i => i.GetLeadChangeTime()).SelectMany(a => a).Where(b => b != 0).Median();
         total = double.IsNaN(total) ? 0 : total;
