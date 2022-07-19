@@ -12,19 +12,23 @@ export function LeadTimeChange({ data, months }: LeadTimeChangeProps) {
       return;
     }
 
-    const getMontlyLeadTimeChange = (data:ILeadTimeChange) =>  data.monthlyLeadTimeChange.map((d) => ({
-      date: new Date(d.key.yearNumber, d.key.monthNumber),
-      median: d.median / 3600,
-    }));
-    const getWeeklyLeadTimeChange = (data:ILeadTimeChange) => data.weeklyLeadTimeChange.map((d) => ({
-      date: getDateOfWeek(d.key.weekNumber, d.key.yearNumber),
-      median: d.median / 3600,
-    }));
+    const getMontlyLeadTimeChange = (data: ILeadTimeChange) =>
+      data.monthlyLeadTimeChange.map((d) => ({
+        date: new Date(d.key.yearNumber, d.key.monthNumber),
+        median: d.median / 3600,
+      }));
+    const getWeeklyLeadTimeChange = (data: ILeadTimeChange) =>
+      data.weeklyLeadTimeChange.map((d) => ({
+        date: getDateOfWeek(d.key.weekNumber, d.key.yearNumber),
+        median: d.median / 3600,
+      }));
 
     const interval =
       months < 4 ? data.weeklyLeadTimeChange : data.monthlyLeadTimeChange;
     const transformedDataMedian =
-      months < 4 ? getWeeklyLeadTimeChange(data) : getMontlyLeadTimeChange(data);
+      months < 4
+        ? getWeeklyLeadTimeChange(data)
+        : getMontlyLeadTimeChange(data);
 
     const transformedData = data.changes.map((d) => ({
       date: new Date(d.startTime * 1000),

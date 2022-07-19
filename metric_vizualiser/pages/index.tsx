@@ -1,11 +1,14 @@
+import { ChangeFailureRate } from "components/cfr/changeFailureRate";
+import { ChangeFailureRateScore } from "components/cfr/changeFailureRateScore";
+import { DeploymentFrequency } from "components/df/deploymentFrequency";
+import { DeploymentFrequencyScore } from "components/df/deploymentFrequencyScore";
+import { LeadTimeChange } from "components/ltc/leadTimeChange";
+import { LeadTimeChangeScore } from "components/ltc/leadTimeChangeScore";
+import { TimeToRestoreService } from "components/ttrs/timeToRestoreService";
+import { TimeToRestoreServiceScore } from "components/ttrs/timeToRestoreServiceScore";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import safeJsonStringify from "safe-json-stringify";
-
-import { ChangeFailureRate } from "components/changeFailureRate";
-import { DeploymentFrequency } from "components/deploymentFrequency";
-import { LeadTimeChange } from "components/leadTimeChange";
 import styles from "styles/Home.module.css";
-
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   if (!context.query?.months) {
@@ -41,8 +44,17 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       // eslint-disable-next-line no-console
       console.error(error);
     });
+  const ttrs = await fetch(
+    `${backend}/RestoreServiceTime?intervalMonths=${months}`
+  )
+    .then((response) => response.json())
+    .then((json) => JSON.parse(safeJsonStringify(json)))
+    .catch(function (error) {
+      // eslint-disable-next-line no-console
+      console.error(error);
+    });
   return {
-    props: { df, ltc, cfr, months }, // will be passed to the page component as props
+    props: { df, ltc, cfr, ttrs, months }, // will be passed to the page component as props
   };
 };
 
@@ -50,10 +62,16 @@ const Home = ({
   df,
   ltc,
   cfr,
+  ttrs,
   months,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   return (
     <div className={styles.container}>
+      <TimeToRestoreServiceScore data={ttrs} months={months} />
+      <ChangeFailureRateScore data={cfr} months={months} />
+      <LeadTimeChangeScore data={ltc} months={months} />
+      <DeploymentFrequencyScore data={df} months={months} />
+      <TimeToRestoreService data={ttrs} months={months} />
       <ChangeFailureRate data={cfr} months={months} />
       <LeadTimeChange data={ltc} months={months} />
       <DeploymentFrequency data={df} months={months} />

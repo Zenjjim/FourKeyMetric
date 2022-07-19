@@ -1,10 +1,16 @@
 import * as Plot from "@observablehq/plot";
 import { useEffect, useRef } from "react";
-import { IChangeFailureRate } from "types";
+import { ITimeToRestoreService } from "types";
 import { getDateOfWeek } from "utils";
-type ChangeFailureRateProps = { data?: IChangeFailureRate; months: number };
+type TimeToRestoreServiceProps = {
+  data?: ITimeToRestoreService;
+  months: number;
+};
 
-export function ChangeFailureRate({ data, months }: ChangeFailureRateProps) {
+export function TimeToRestoreService({
+  data,
+  months,
+}: TimeToRestoreServiceProps) {
   const headerRef = useRef(null);
 
   useEffect(() => {
@@ -12,30 +18,21 @@ export function ChangeFailureRate({ data, months }: ChangeFailureRateProps) {
       return;
     }
 
-    const getmontlyTransformedDataMedian = (data:IChangeFailureRate) => data.changeFailureRateByMonth.map(
-      (d) => ({
+    const getmontlyTransformedDataMedian = (data: ITimeToRestoreService) =>
+      data.monthlyRestoreServiceTime.map((d) => ({
         date: new Date(d.key.yearNumber, d.key.monthNumber),
-        median: d.changeFailureRate * 100,
-      })
-    );
-    const getweeklyTransformedDataMedian = (data:IChangeFailureRate) => data.changeFailureRateByWeek.map(
-      (d) => ({
+        median: d.median / 3600,
+      }));
+    const getweeklyTransformedDataMedian = (data: ITimeToRestoreService) =>
+      data.weeklyRestoreServiceTime.map((d) => ({
         date: getDateOfWeek(d.key.weekNumber, d.key.yearNumber),
-        median: d.changeFailureRate * 100,
-      })
-    );
-
-    const getDailyTransformedDataMedian = (data:IChangeFailureRate) =>  data.changeFailureRateByDay.map((d) => ({
-      date: new Date(d.key.yearNumber, d.key.monthNumber, d.key.dayNumber),
-      median: d.changeFailureRate * 100,
-    }));
+        median: d.median / 3600,
+      }));
 
     const transformedDataMedian =
       months < 2
         ? getmontlyTransformedDataMedian(data)
-        : months < 4
-        ? getweeklyTransformedDataMedian(data)
-        : getDailyTransformedDataMedian(data);
+        : getweeklyTransformedDataMedian(data);
 
     const chart = Plot.plot({
       style: {
@@ -43,7 +40,7 @@ export function ChangeFailureRate({ data, months }: ChangeFailureRateProps) {
       },
       y: {
         grid: true,
-        label: "Percentage %",
+        label: "Hours",
       },
       color: {
         type: "diverging",

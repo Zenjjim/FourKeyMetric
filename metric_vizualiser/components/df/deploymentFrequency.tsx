@@ -1,7 +1,6 @@
 import * as Plot from "@observablehq/plot";
 import * as d3 from "d3";
 import { useEffect, useRef } from "react";
-
 import { IDeploymentFrequency } from "types";
 type DeploymentFrequencyProps = { data?: IDeploymentFrequency; months: number };
 export function DeploymentFrequency({

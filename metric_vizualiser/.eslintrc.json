@@ -36,34 +36,16 @@
   "rules": {
     "arrow-spacing": "error",
     "babel/no-invalid-this": "warn",
-    "block-spacing": [
-      "error",
-      "never"
-    ],
-    "brace-style": [
-      "error",
-      "1tbs"
-    ],
+    "block-spacing": ["error", "never"],
+    "brace-style": ["error", "1tbs"],
     "comma-spacing": "error",
-    "comma-style": [
-      "error",
-      "last"
-    ],
-    "curly": [
-      "error",
-      "all"
-    ],
+    "comma-style": ["error", "last"],
+    "curly": ["error", "all"],
     "eol-last": "error",
-    "eqeqeq": [
-      "error",
-      "always"
-    ],
+    "eqeqeq": ["error", "always"],
     "func-call-spacing": "error",
     "guard-for-in": "off",
-    "json/*": [
-      "error",
-      "allowComments"
-    ],
+    "json/*": ["error", "allowComments"],
     "jsx-a11y/tabindex-no-positive": "error",
     "jsx-a11y/alt-text": "error",
     "jsx-a11y/aria-props": "error",
@@ -87,9 +69,7 @@
     "no-empty-function": [
       "error",
       {
-        "allow": [
-          "arrowFunctions"
-        ]
+        "allow": ["arrowFunctions"]
       }
     ],
     "no-implicit-coercion": "error",
@@ -107,9 +87,7 @@
     "no-useless-return": "error",
     "no-whitespace-before-property": "error",
     "quote-props": "off",
-    "react/jsx-sort-props": [
-      "error"
-    ],
+    "react/jsx-sort-props": ["error"],
     "react-hooks/rules-of-hooks": "error",
     "require-jsdoc": "off",
     "space-before-blocks": "error",
@@ -131,26 +109,15 @@
     "jsx-a11y/anchor-is-valid": [
       "error",
       {
-        "components": [
-          "Link"
-        ],
-        "specialLink": [
-          "hrefLeft",
-          "hrefRight"
-        ],
-        "aspects": [
-          "invalidHref",
-          "preferButton"
-        ]
+        "components": ["Link"],
+        "specialLink": ["hrefLeft", "hrefRight"],
+        "aspects": ["invalidHref", "preferButton"]
       }
     ],
     "no-restricted-imports": [
       "error",
       {
-        "patterns": [
-          "@mui/*/*/*",
-          "!@mui/material/test-utils/*"
-        ]
+        "patterns": ["@mui/*/*/*", "!@mui/material/test-utils/*"]
       }
     ]
   },
@@ -168,14 +135,10 @@
       }
     ]
   },
-  "ignorePatterns": [
-    "src/prisma/generated/*"
-  ],
+  "ignorePatterns": ["src/prisma/generated/*"],
   "overrides": [
     {
-      "files": [
-        "src/**/*.{js,jsx,ts,tsx}"
-      ]
+      "files": ["src/**/*.{js,jsx,ts,tsx}"]
     }
   ]
 }
