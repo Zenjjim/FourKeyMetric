@@ -1,23 +1,26 @@
 import * as Plot from "@observablehq/plot";
-import { useEffect, useRef } from "react";
+import { COLORS } from "const";
+import { useEffect, useRef, useState } from "react";
 import { ITimeToRestoreService } from "types";
 import { getDateOfWeek } from "utils";
+import {LineChart} from "@d3/line-with-tooltip"
+
 type TimeToRestoreServiceProps = {
   data?: ITimeToRestoreService;
   months: number;
+  size: {width: number, height: number};
 };
 
 export function TimeToRestoreService({
   data,
   months,
+  size,
 }: TimeToRestoreServiceProps) {
   const headerRef = useRef(null);
-
   useEffect(() => {
     if (data === undefined) {
       return;
     }
-
     const getmontlyTransformedDataMedian = (data: ITimeToRestoreService) =>
       data.monthlyRestoreServiceTime.map((d) => ({
         date: new Date(d.key.yearNumber, d.key.monthNumber),
@@ -36,7 +39,7 @@ export function TimeToRestoreService({
 
     const chart = Plot.plot({
       style: {
-        background: "transparent",
+        background: COLORS.PAPER,
       },
       y: {
         grid: true,
@@ -55,15 +58,25 @@ export function TimeToRestoreService({
           y: "median",
           curve: "basis",
           marker: "circle",
-          stroke: "steelblue",
+          stroke: COLORS.BLUE,
           opacity: 1,
         }),
       ],
+      width: size.width,
+      height: size.height,
     });
     // @ts-ignore
     headerRef.current.append(chart);
-    return () => chart.remove();
-  }, [data, months]);
+    return () => {
+      chart.remove();
+    };
+  }, [data, months, size]);
 
-  return <div ref={headerRef}></div>;
+  return (
+    <div style={{ paddingLeft: "10px" }} ref={headerRef}>
+      <h3 style={{ color: COLORS.WHITE }}>
+        {"Median Time To Restore Service"}
+      </h3>
+    </div>
+  );
 }

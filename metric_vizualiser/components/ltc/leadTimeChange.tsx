@@ -1,17 +1,20 @@
 import * as Plot from "@observablehq/plot";
+import { COLORS } from "const";
 import { useEffect, useRef } from "react";
 import { ILeadTimeChange } from "types";
 import { getDateOfWeek } from "utils";
-type LeadTimeChangeProps = { data?: ILeadTimeChange; months: number };
+type LeadTimeChangeProps = {
+  data?: ILeadTimeChange;
+  months: number;
+  size: {width: number, height: number};
+};
 
-export function LeadTimeChange({ data, months }: LeadTimeChangeProps) {
+export function LeadTimeChange({ data, months, size }: LeadTimeChangeProps) {
   const headerRef = useRef(null);
-
   useEffect(() => {
     if (data === undefined) {
       return;
     }
-
     const getMontlyLeadTimeChange = (data: ILeadTimeChange) =>
       data.monthlyLeadTimeChange.map((d) => ({
         date: new Date(d.key.yearNumber, d.key.monthNumber),
@@ -33,11 +36,13 @@ export function LeadTimeChange({ data, months }: LeadTimeChangeProps) {
     const transformedData = data.changes.map((d) => ({
       date: new Date(d.startTime * 1000),
       time: (d.finishTime - d.startTime) / 3600,
+      prSize: d.prSize,
+      nrOfCommits: d.nrOfCommits
     }));
 
     const chart = Plot.plot({
       style: {
-        background: "transparent",
+        background: COLORS.PAPER,
       },
       y: {
         grid: true,
@@ -56,22 +61,30 @@ export function LeadTimeChange({ data, months }: LeadTimeChangeProps) {
           y: "median",
           curve: "basis",
           marker: "circle",
-          stroke: "steelblue",
+          stroke: COLORS.BLUE,
           opacity: 1,
         }),
+
         Plot.dot(transformedData, {
           x: "date",
           y: "time",
-          fill: "steelblue",
+          r: "nrOfCommits",
+          fill: COLORS.BLUE,
           fillOpacity: 0.75,
           interval: interval,
         }),
       ],
+      width: size.width,
+      height: size.height,
     });
     // @ts-ignore
     headerRef.current.append(chart);
     return () => chart.remove();
-  }, [data, months]);
+  }, [data, months, size]);
 
-  return <div ref={headerRef}></div>;
+  return (
+    <div style={{ paddingLeft: "10px" }} ref={headerRef}>
+      <h3 style={{ color: COLORS.WHITE }}>{"Median Lead Time for Changes"}</h3>
+    </div>
+  );
 }

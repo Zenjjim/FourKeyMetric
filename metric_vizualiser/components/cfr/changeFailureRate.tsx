@@ -1,17 +1,24 @@
 import * as Plot from "@observablehq/plot";
+import { COLORS } from "const";
 import { useEffect, useRef } from "react";
 import { IChangeFailureRate } from "types";
 import { getDateOfWeek } from "utils";
-type ChangeFailureRateProps = { data?: IChangeFailureRate; months: number };
+type ChangeFailureRateProps = {
+  data?: IChangeFailureRate;
+  months: number;
+  size: {width: number, height: number};
+};
 
-export function ChangeFailureRate({ data, months }: ChangeFailureRateProps) {
+export function ChangeFailureRate({
+  data,
+  months,
+  size,
+}: ChangeFailureRateProps) {
   const headerRef = useRef(null);
-
   useEffect(() => {
     if (data === undefined) {
       return;
     }
-
     const getmontlyTransformedDataMedian = (data: IChangeFailureRate) =>
       data.changeFailureRateByMonth.map((d) => ({
         date: new Date(d.key.yearNumber, d.key.monthNumber),
@@ -38,7 +45,7 @@ export function ChangeFailureRate({ data, months }: ChangeFailureRateProps) {
 
     const chart = Plot.plot({
       style: {
-        background: "transparent",
+        background: COLORS.PAPER,
       },
       y: {
         grid: true,
@@ -57,15 +64,22 @@ export function ChangeFailureRate({ data, months }: ChangeFailureRateProps) {
           y: "median",
           curve: "basis",
           marker: "circle",
-          stroke: "steelblue",
+          stroke: COLORS.BLUE,
           opacity: 1,
         }),
       ],
+      width: size.width,
+      height: size.height,
     });
     // @ts-ignore
     headerRef.current.append(chart);
     return () => chart.remove();
-  }, [data, months]);
-
-  return <div ref={headerRef}></div>;
+  }, [data, months, size]);
+  return (
+    <div style={{ paddingLeft: "10px" }} ref={headerRef}>
+      <h3 style={{ color: COLORS.WHITE }}>
+        {"Change Failure Rate"}
+      </h3>
+    </div>
+  );
 }
