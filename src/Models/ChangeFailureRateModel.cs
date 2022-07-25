@@ -7,7 +7,7 @@ public class ChangeFailureRateModel
 {
     public ChangeFailureRateModel(double changeFailureRate, IEnumerable<ChangeFailureRateDay> changeFailureRateByDay, IEnumerable<ChangeFailureRateWeek> changeFailureRateByWeek, IEnumerable<ChangeFailureRateMonth> changeFailureRateByMonth)
     {
-        ChangeFailureRate = changeFailureRate;
+        ChangeFailureRate = !double.IsNaN(changeFailureRate) ? changeFailureRate : 0;
         ChangeFailureRateByDay = changeFailureRateByDay;
         ChangeFailureRateByWeek = changeFailureRateByWeek;
         ChangeFailureRateByMonth = changeFailureRateByMonth;
