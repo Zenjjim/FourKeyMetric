@@ -2,10 +2,10 @@ export interface IDeploymentFrequency {
   dailyMedian: number;
   weeklyMedian: number;
   monthlyMedian: number;
-  weeklyDeployments: WeeklyDeployment[];
+  deployments: Deployment[];
 }
 
-export interface WeeklyDeployment {
+export interface Deployment {
   dayNumber: number;
   weekNumber: number;
   monthNumber: number;
@@ -158,4 +158,11 @@ export interface WeeklyRestoreServiceTimeKey {
   weekNumber: number;
   yearNumber: number;
   monthNumber: number;
+}
+
+export interface IInfo {
+  [key: string]: IOrganizationInfo;
+}
+export interface IOrganizationInfo {
+  [key: string]: string[];
 }

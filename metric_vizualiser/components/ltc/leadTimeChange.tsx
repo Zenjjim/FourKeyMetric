@@ -1,3 +1,4 @@
+import { Text } from "@chakra-ui/react";
 import * as Plot from "@observablehq/plot";
 import { COLORS } from "const";
 import { useEffect, useRef } from "react";
@@ -6,7 +7,7 @@ import { getDateOfWeek } from "utils";
 type LeadTimeChangeProps = {
   data?: ILeadTimeChange;
   months: number;
-  size: {width: number, height: number};
+  size: { width: number; height: number };
 };
 
 export function LeadTimeChange({ data, months, size }: LeadTimeChangeProps) {
@@ -37,7 +38,7 @@ export function LeadTimeChange({ data, months, size }: LeadTimeChangeProps) {
       date: new Date(d.startTime * 1000),
       time: (d.finishTime - d.startTime) / 3600,
       prSize: d.prSize,
-      nrOfCommits: d.nrOfCommits
+      nrOfCommits: d.nrOfCommits,
     }));
 
     const chart = Plot.plot({
@@ -83,8 +84,17 @@ export function LeadTimeChange({ data, months, size }: LeadTimeChangeProps) {
   }, [data, months, size]);
 
   return (
-    <div style={{ paddingLeft: "10px" }} ref={headerRef}>
-      <h3 style={{ color: COLORS.WHITE }}>{"Median Lead Time for Changes"}</h3>
+    <div
+      style={{
+        justifyContent: "space-between",
+        display: "flex",
+        flexDirection: "column",
+        height: "100%",
+        margin: "0 10px",
+      }}
+    >
+      <Text fontSize="2xl">{"Lead Time for Changes"}</Text>
+      <div ref={headerRef} style={{ marginBottom: "20px" }} />
     </div>
   );
 }

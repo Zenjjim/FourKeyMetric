@@ -1,11 +1,22 @@
 import { Score } from "components/score";
 import { COLORS } from "const";
 import { IDeploymentFrequency } from "types";
-type DeploymentFrequencyProps = { data: IDeploymentFrequency,    textSize: number };
-export function DeploymentFrequencyScore({ data, textSize }: DeploymentFrequencyProps) {
+type DeploymentFrequencyProps = {
+  data: IDeploymentFrequency;
+  textSize: number;
+};
+export function DeploymentFrequencyScore({
+  data,
+  textSize,
+}: DeploymentFrequencyProps) {
   const [category, color] = df_category(data);
   return (
-    <Score category={category} color={color} title={"Deployment Frequency"} textSize={textSize} />
+    <Score
+      category={category}
+      color={color}
+      textSize={textSize}
+      title={"Deployment Frequency"}
+    />
   );
 }
 

@@ -4,16 +4,19 @@ import { ITimeToRestoreService } from "types";
 import { getHoursfromSeconds } from "utils";
 type TimeToRestoreServiceProps = {
   data: ITimeToRestoreService;
-  textSize: number
+  textSize: number;
 };
-export function TimeToRestoreServiceScore({ data, textSize }: TimeToRestoreServiceProps) {
-  const [category, color] = ttrs_category(data.medianRestoreServiceTime);
+export function TimeToRestoreServiceScore({
+  data,
+  textSize,
+}: TimeToRestoreServiceProps) {
+  const [category, color] = ttrs_category(data?.medianRestoreServiceTime);
   return (
     <Score
       category={category}
       color={color}
-      title={"Median Time To Restore Service"}
       textSize={textSize}
+      title={"Time To Restore Service"}
     />
   );
 }

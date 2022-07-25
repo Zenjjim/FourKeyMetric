@@ -1,14 +1,14 @@
+import { Text } from "@chakra-ui/react";
 import * as Plot from "@observablehq/plot";
 import { COLORS } from "const";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { ITimeToRestoreService } from "types";
 import { getDateOfWeek } from "utils";
-import {LineChart} from "@d3/line-with-tooltip"
 
 type TimeToRestoreServiceProps = {
   data?: ITimeToRestoreService;
   months: number;
-  size: {width: number, height: number};
+  size: { width: number; height: number };
 };
 
 export function TimeToRestoreService({
@@ -73,10 +73,17 @@ export function TimeToRestoreService({
   }, [data, months, size]);
 
   return (
-    <div style={{ paddingLeft: "10px" }} ref={headerRef}>
-      <h3 style={{ color: COLORS.WHITE }}>
-        {"Median Time To Restore Service"}
-      </h3>
+    <div
+      style={{
+        justifyContent: "space-between",
+        display: "flex",
+        flexDirection: "column",
+        height: "100%",
+        margin: "0 10px",
+      }}
+    >
+      <Text fontSize="2xl">{"Time To Restore Service"}</Text>
+      <div ref={headerRef} style={{ marginBottom: "20px" }} />
     </div>
   );
 }

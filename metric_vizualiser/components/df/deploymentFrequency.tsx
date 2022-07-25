@@ -1,3 +1,4 @@
+import { Text } from "@chakra-ui/react";
 import * as Plot from "@observablehq/plot";
 import { COLORS } from "const";
 import * as d3 from "d3";
@@ -6,7 +7,7 @@ import { IDeploymentFrequency } from "types";
 type DeploymentFrequencyProps = {
   data?: IDeploymentFrequency;
   months: number;
-  size: {width: number, height: number};
+  size: { width: number; height: number };
 };
 export function DeploymentFrequency({
   data,
@@ -22,7 +23,7 @@ export function DeploymentFrequency({
     if (data === undefined) {
       return;
     }
-    const transformedData = data.weeklyDeployments.map((d) => ({
+    const transformedData = data.deployments.map((d) => ({
       date: new Date(d.yearNumber, d.monthNumber - 1, d.dayNumber),
       count: d.deploymentsInBucket.length,
     }));
@@ -59,8 +60,17 @@ export function DeploymentFrequency({
     return () => chart.remove();
   }, [data, months, interval, size]);
   return (
-    <div style={{ paddingLeft: "10px" }} ref={headerRef}>
-      <h3 style={{ color: COLORS.WHITE}}>{"Deployment Frequency"}</h3>
+    <div
+      style={{
+        justifyContent: "space-between",
+        display: "flex",
+        flexDirection: "column",
+        height: "100%",
+        margin: "0 10px",
+      }}
+    >
+      <Text fontSize="2xl">{"Deployment Frequency"}</Text>
+      <div ref={headerRef} style={{ marginBottom: "20px" }} />
     </div>
   );
 }

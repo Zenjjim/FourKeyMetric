@@ -1,12 +1,14 @@
+import { Text } from "@chakra-ui/react";
 import * as Plot from "@observablehq/plot";
 import { COLORS } from "const";
 import { useEffect, useRef } from "react";
 import { IChangeFailureRate } from "types";
 import { getDateOfWeek } from "utils";
+
 type ChangeFailureRateProps = {
   data?: IChangeFailureRate;
   months: number;
-  size: {width: number, height: number};
+  size: { width: number; height: number };
 };
 
 export function ChangeFailureRate({
@@ -76,10 +78,17 @@ export function ChangeFailureRate({
     return () => chart.remove();
   }, [data, months, size]);
   return (
-    <div style={{ paddingLeft: "10px" }} ref={headerRef}>
-      <h3 style={{ color: COLORS.WHITE }}>
-        {"Change Failure Rate"}
-      </h3>
+    <div
+      style={{
+        justifyContent: "space-between",
+        display: "flex",
+        flexDirection: "column",
+        height: "100%",
+        margin: "0 10px",
+      }}
+    >
+      <Text fontSize="2xl">{"Change Failure Rate"}</Text>
+      <div ref={headerRef} style={{ marginBottom: "20px" }} />
     </div>
   );
 }
