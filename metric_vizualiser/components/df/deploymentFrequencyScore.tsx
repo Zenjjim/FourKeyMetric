@@ -26,14 +26,21 @@ export function df_category({
   monthlyMedian,
 }: IDeploymentFrequency) {
   if (dailyMedian >= 1) {
-    return ["Daily", COLORS.PURPLE];
+    return [DeploymentFrequencyEnums.DAILY, COLORS.PURPLE];
   } else if (weeklyMedian >= 3) {
-    return ["Daily", COLORS.GREEN];
+    return [DeploymentFrequencyEnums.DAILY, COLORS.GREEN];
   } else if (weeklyMedian >= 1) {
-    return ["Weekly", COLORS.GREEN];
+    return [DeploymentFrequencyEnums.WEEKLY, COLORS.GREEN];
   } else if (monthlyMedian >= 1) {
-    return ["Monthly", COLORS.YELLOW];
+    return [DeploymentFrequencyEnums.MONTHLY, COLORS.YELLOW];
   } else {
-    return ["Yearly", COLORS.RED];
+    return [DeploymentFrequencyEnums.YEARLY, COLORS.RED];
   }
 }
+
+export enum DeploymentFrequencyEnums {
+  DAILY = "Daily",
+  WEEKLY = "Weekly",
+  MONTHLY = "Monthly",
+  YEARLY = "Yearly",
+} 

@@ -79,10 +79,21 @@ export const Filter = ({ info }: FilterProps) => {
         flexDirection="column"
         gap="10px"
         marginBottom="20px"
-        padding="5px 10px 10px 10px"
+        padding="10px"
         width="100%"
       >
-        <Text fontSize="2xl">Filter</Text>
+       
+        <Button
+          color={COLORS.BLUE}
+          variant={"ghost"}
+          onClick={onToggle}
+          rightIcon={isOpen ? <ChevronUpIcon /> : <ChevronDownIcon />}
+          width="fit-content"
+          size="sm"
+          fontSize="20px"
+        >
+           {isOpen ? "Lukk Filter" : "Åpne Filter"}
+        </Button>
         <Collapse in={isOpen}>
           <form style={{ display: "flex", gap: "20px" }}>
             <Select
@@ -158,14 +169,6 @@ export const Filter = ({ info }: FilterProps) => {
             </Flex>
           </form>
         </Collapse>
-        <Button
-          colorScheme="blue"
-          onClick={onToggle}
-          rightIcon={isOpen ? <ChevronUpIcon /> : <ChevronDownIcon />}
-          width="120px"
-        >
-          {isOpen ? "Lukk Filter" : "Åpne Filter"}
-        </Button>
       </Box>
     </>
   );

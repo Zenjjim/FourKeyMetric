@@ -6,8 +6,10 @@ export interface IDeploymentFrequency {
 }
 
 export interface Deployment {
-  dayNumber: number;
-  weekNumber: number;
+  date?: Date;
+  count?: number;
+  dayNumber?: number;
+  weekNumber?: number;
   monthNumber: number;
   yearNumber: number;
   deploymentsInBucket: DeploymentsInBucket[];
