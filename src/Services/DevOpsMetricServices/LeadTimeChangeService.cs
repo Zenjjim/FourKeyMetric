@@ -96,6 +96,6 @@ public class LeadTimeChangeService
 
             });
         
-        return new LeadTimeChangeModel(total, weekly, monthly, changesList);
+        return new LeadTimeChangeModel(total, weekly, monthly, changesList.OrderBy(change => change.StartTime));
     }
 }

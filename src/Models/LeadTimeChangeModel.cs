@@ -5,7 +5,7 @@ namespace devops_metrics.Models;
 
 public class LeadTimeChangeModel
 {
-    public LeadTimeChangeModel(double medianLeadTimeChange, IEnumerable<Weekly> weeklyLeadTimeChange, IEnumerable<Monthly> monthlyLeadTimeChange, List<Change> changesList)
+    public LeadTimeChangeModel(double medianLeadTimeChange, IEnumerable<Weekly> weeklyLeadTimeChange, IEnumerable<Monthly> monthlyLeadTimeChange, IOrderedEnumerable<Change> changesList)
     {
         this.MedianLeadTimeChange = !double.IsNaN(medianLeadTimeChange) ? medianLeadTimeChange : 0;
         this.WeeklyLeadTimeChange = weeklyLeadTimeChange;
@@ -16,5 +16,5 @@ public class LeadTimeChangeModel
     public double MedianLeadTimeChange { get; set; }
     public IEnumerable<Weekly> WeeklyLeadTimeChange { get; set; }
     public IEnumerable<Monthly> MonthlyLeadTimeChange { get; set; }
-    public List<Change> Changes { get; set; }
+    public IOrderedEnumerable<Change> Changes { get; set; }
 }
