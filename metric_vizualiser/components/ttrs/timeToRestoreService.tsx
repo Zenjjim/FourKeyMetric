@@ -116,7 +116,7 @@ export function TimeToRestoreService({
         <Line
           data={transformedDataMedian}
           dataKey="median"
-          dot={false}
+          dot={true}
           isAnimationActive={false}
           stroke={COLORS.BLUE}
           strokeWidth={3}
