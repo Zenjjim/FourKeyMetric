@@ -14,7 +14,6 @@ import {
   SliderFilledTrack,
   SliderThumb,
   SliderTrack,
-  Text,
   useDisclosure,
 } from "@chakra-ui/react";
 import { COLORS } from "const";
@@ -82,23 +81,23 @@ export const Filter = ({ info }: FilterProps) => {
         padding="10px"
         width="100%"
       >
-       
         <Button
           color={COLORS.BLUE}
-          variant={"ghost"}
+          fontSize="20px"
           onClick={onToggle}
           rightIcon={isOpen ? <ChevronUpIcon /> : <ChevronDownIcon />}
-          width="fit-content"
           size="sm"
-          fontSize="20px"
+          variant={"ghost"}
+          width="fit-content"
         >
-           {isOpen ? "Lukk Filter" : "Åpne Filter"}
+          {isOpen ? "Lukk Filter" : "Åpne Filter"}
         </Button>
         <Collapse in={isOpen}>
           <form style={{ display: "flex", gap: "20px" }}>
             <Select
               placeholder={"Organisasjon"}
               {...register("organization")}
+              color="white"
               onChange={(e) => {
                 setValue("organization", e.target.value);
                 setValue("project", ``);
@@ -143,7 +142,7 @@ export const Filter = ({ info }: FilterProps) => {
               <NumberInput
                 maxW="100px"
                 mr="2rem"
-                onChange={handleChange}
+                onChange={(_: string, value: number) => handleChange(value)}
                 value={value}
               >
                 <NumberInputField />
@@ -152,6 +151,7 @@ export const Filter = ({ info }: FilterProps) => {
                   <NumberDecrementStepper />
                 </NumberInputStepper>
               </NumberInput>
+
               <Slider
                 flex="1"
                 focusThumbOnChange={false}

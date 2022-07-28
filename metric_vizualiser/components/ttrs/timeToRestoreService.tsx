@@ -1,89 +1,135 @@
-import { Text } from "@chakra-ui/react";
-import * as Plot from "@observablehq/plot";
 import { COLORS } from "const";
-import { useEffect, useRef } from "react";
+import * as d3 from "d3";
+import {
+  CartesianGrid,
+  Line,
+  LineChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts";
 import { ITimeToRestoreService } from "types";
 import { getDateOfWeek } from "utils";
 
 type TimeToRestoreServiceProps = {
-  data?: ITimeToRestoreService;
+  data: ITimeToRestoreService;
   months: number;
-  size: { width: number; height: number };
 };
 
 export function TimeToRestoreService({
   data,
   months,
-  size,
 }: TimeToRestoreServiceProps) {
-  const headerRef = useRef(null);
-  useEffect(() => {
-    if (data === undefined) {
-      return;
+  const getmontlyTransformedDataMedian = (data: ITimeToRestoreService) =>
+    data.monthlyRestoreServiceTime.map((d) => ({
+      date: new Date(d.key.yearNumber, d.key.monthNumber),
+      median: d.median / 3600,
+    }));
+  const getweeklyTransformedDataMedian = (data: ITimeToRestoreService) =>
+    data.weeklyRestoreServiceTime.map((d) => ({
+      date: getDateOfWeek(d.key.weekNumber, d.key.yearNumber),
+      median: d.median / 3600,
+    }));
+
+  const transformedDataMedian =
+    months < 6
+      ? getmontlyTransformedDataMedian(data)
+      : getweeklyTransformedDataMedian(data);
+
+  const CustomTooltip = ({
+    active,
+    payload,
+    label,
+  }: {
+    active: boolean | undefined;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    payload: Array<any>;
+    label: Date | undefined;
+  }) => {
+    if (active && payload && payload.length) {
+      return (
+        <div
+          style={{
+            backgroundColor: COLORS.PAPER,
+            padding: "5px",
+            borderRadius: "10px",
+          }}
+        >
+          <p className="label">{`Hours to Restore : ${Math.round(
+            payload[0].value
+          )}`}</p>
+          <p className="date">{`Date : ${(label as Date).toDateString()}`}</p>
+        </div>
+      );
     }
-    const getmontlyTransformedDataMedian = (data: ITimeToRestoreService) =>
-      data.monthlyRestoreServiceTime.map((d) => ({
-        date: new Date(d.key.yearNumber, d.key.monthNumber),
-        median: d.median / 3600,
-      }));
-    const getweeklyTransformedDataMedian = (data: ITimeToRestoreService) =>
-      data.weeklyRestoreServiceTime.map((d) => ({
-        date: getDateOfWeek(d.key.weekNumber, d.key.yearNumber),
-        median: d.median / 3600,
-      }));
-
-    const transformedDataMedian =
-      months < 2
-        ? getmontlyTransformedDataMedian(data)
-        : getweeklyTransformedDataMedian(data);
-
-    const chart = Plot.plot({
-      style: {
-        background: COLORS.PAPER,
-      },
-      y: {
-        grid: true,
-        label: "Hours",
-      },
-      color: {
-        type: "diverging",
-        scheme: "burd",
-        range: ["red", "blue"],
-        interpolate: "hcl",
-      },
-      marks: [
-        Plot.ruleY([0]),
-        Plot.line(transformedDataMedian, {
-          x: "date",
-          y: "median",
-          curve: "basis",
-          marker: "circle",
-          stroke: COLORS.BLUE,
-          opacity: 1,
-        }),
-      ],
-      width: size.width,
-      height: size.height,
-    });
-    // @ts-ignore
-    headerRef.current.append(chart);
-    return () => {
-      chart.remove();
-    };
-  }, [data, months, size]);
-
+    return null;
+  };
   return (
-    <div
-      style={{
-        justifyContent: "space-between",
-        display: "flex",
-        flexDirection: "column",
-        height: "100%",
-        margin: "0 10px",
-      }}
-    >
-      <Text fontSize="2xl">{"Time To Restore Service"}</Text>
-      <div ref={headerRef} style={{ marginBottom: "20px" }} />
-    </div>
+    <ResponsiveContainer height="100%" width="100%">
+      <LineChart
+        margin={{
+          top: 50,
+          right: 50,
+          bottom: 50,
+          left: 50,
+        }}
+      >
+        <text
+          dominantBaseline="central"
+          fill={COLORS.WHITE}
+          textAnchor="middle"
+          x={200}
+          y={20}
+        >
+          <tspan fontSize="20" fontWeight="bolder">
+            Median Time To Restore Service
+          </tspan>
+        </text>
+
+        <XAxis
+          dataKey="date"
+          label={{
+            value: "Date",
+            dx: 0,
+            dy: 20,
+            fill: COLORS.WHITE,
+            opacity: 0.75,
+          }}
+          opacity={0.75}
+          stroke={COLORS.WHITE}
+          tickFormatter={d3.timeFormat("%d %B")}
+        />
+        <YAxis
+          dataKey="median"
+          label={{
+            value: "Hours",
+            angle: -90,
+            dx: -30,
+            dy: 0,
+            fill: COLORS.WHITE,
+            opacity: 0.75,
+          }}
+          opacity={0.75}
+          stroke={COLORS.WHITE}
+        />
+        <Line
+          data={transformedDataMedian}
+          dataKey="median"
+          dot={false}
+          isAnimationActive={false}
+          stroke={COLORS.BLUE}
+          strokeWidth={3}
+          type="monotone"
+        />
+        <CartesianGrid opacity={0.25} stroke={COLORS.WHITE} vertical={false} />
+        <Tooltip
+          content={
+            <CustomTooltip active={undefined} label={undefined} payload={[]} />
+          }
+          cursor={{ fill: "rgba(255, 255, 255, 0.1)" }}
+        />
+      </LineChart>
+    </ResponsiveContainer>
   );
 }

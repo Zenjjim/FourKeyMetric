@@ -5,9 +5,8 @@ type ScoreProps = {
   category: string;
   color: string;
   title: string;
-  textSize: number;
 };
-export function Score({ category, color, title, textSize }: ScoreProps) {
+export function Score({ category, color, title }: ScoreProps) {
   return (
     <div style={{ width: "100%", position: "relative" }}>
       <Text
@@ -25,7 +24,15 @@ export function Score({ category, color, title, textSize }: ScoreProps) {
           height: "100%",
         }}
       >
-        <div style={{ color: color, fontSize: `${textSize}px`, width: "100%" }}>
+        <div
+          style={{
+            color: color,
+            fontSize: `3vw`,
+            width: "100%",
+            marginLeft: "10px",
+            marginRight: "10px",
+          }}
+        >
           {category}
         </div>
       </div>

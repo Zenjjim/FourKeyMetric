@@ -62,7 +62,7 @@ public class LeadTimeChangeService
         var total = changesBucket.Select(day => day.GetLeadChangeTime()).SelectMany(day => day).Where(b => b != 0)
             .Median();
         total = double.IsNaN(total) ? 0 : total;
-        var weekly = changesBucket.GroupBy(bucket => new { bucket.WeekNumber, bucket.YearNumber, bucket.MonthNumber})
+        var weekly = changesBucket.GroupBy(bucket => new { bucket.WeekNumber, bucket.YearNumber})
             .Select(week =>
             {
                 var med = week.Select(day => day.GetLeadChangeTime()).SelectMany(day => day)
@@ -71,7 +71,7 @@ public class LeadTimeChangeService
                 {
                     Key = new WeekKey
                     {
-                        WeekNumber = week.Key.WeekNumber, MonthNumber = week.Key.MonthNumber,
+                        WeekNumber = week.Key.WeekNumber,
                         YearNumber = week.Key.YearNumber
                     },
                     Median =

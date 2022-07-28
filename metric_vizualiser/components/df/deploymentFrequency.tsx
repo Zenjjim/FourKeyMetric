@@ -1,99 +1,161 @@
 import { COLORS } from "const";
 import * as d3 from "d3";
-import { useState } from "react";
-import { Bar, BarChart, CartesianGrid, Cell, Label, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
-import { Deployment, DeploymentsInBucket, IDeploymentFrequency } from "types";
+import {
+  Bar,
+  BarChart,
+  CartesianGrid,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts";
+import { Deployment, IDeploymentFrequency } from "types";
 import { getDateOfWeek } from "utils";
 type DeploymentFrequencyProps = {
   data: IDeploymentFrequency;
   months: number;
-  size: { width: number; height: number };
 };
-interface Map {
-  [key: string]: DeploymentsInBucket[]
-}
 export function DeploymentFrequency({
   data,
   months,
-  size,
 }: DeploymentFrequencyProps) {
-  console.log(data)
-
-  const daily = 2
-  const weekly = 6
+  const daily = 2;
+  const weekly = 6;
   const getDaily = (data: IDeploymentFrequency) => {
-    return data.deployments.map(deployment => {
-      deployment["date"] = new Date(deployment.yearNumber, deployment.monthNumber-1, deployment.dayNumber)
-      deployment["count"] = deployment.deploymentsInBucket.length
-      return deployment
-    })
-  }
+    return data.deployments.map((deployment) => {
+      deployment["date"] = new Date(
+        deployment.yearNumber,
+        deployment.monthNumber - 1,
+        deployment.dayNumber
+      );
+      deployment["count"] = deployment.deploymentsInBucket.length;
+      return deployment;
+    });
+  };
 
   const getWeekly = (data: IDeploymentFrequency) => {
-    const temp: Deployment[] = []
-    data.deployments.forEach(deployment => {
-      const found = temp.find(t => t.weekNumber === deployment.weekNumber && t.yearNumber === deployment.yearNumber)
-      if (found){
-        found.deploymentsInBucket = found.deploymentsInBucket.concat(deployment.deploymentsInBucket)
+    const temp: Deployment[] = [];
+    data.deployments.forEach((deployment) => {
+      const found = temp.find(
+        (t) =>
+          t.weekNumber === deployment.weekNumber &&
+          t.yearNumber === deployment.yearNumber
+      );
+      if (found) {
+        found.deploymentsInBucket = found.deploymentsInBucket.concat(
+          deployment.deploymentsInBucket
+        );
       } else {
         temp.push({
-          date: getDateOfWeek(deployment.weekNumber as number, deployment.yearNumber),
+          date: getDateOfWeek(
+            deployment.weekNumber as number,
+            deployment.yearNumber
+          ),
           weekNumber: deployment.weekNumber,
           monthNumber: deployment.monthNumber,
           yearNumber: deployment.yearNumber,
-          deploymentsInBucket: deployment.deploymentsInBucket
-        })
+          deploymentsInBucket: deployment.deploymentsInBucket,
+        });
       }
-    })
-    return temp.map(deployment => {
-      deployment["count"] = deployment.deploymentsInBucket.length
-      return deployment
-    })
-  }
+    });
+    return temp.map((deployment) => {
+      deployment["count"] = deployment.deploymentsInBucket.length;
+      return deployment;
+    });
+  };
   const getMonthly = (data: IDeploymentFrequency) => {
-    const temp: Deployment[] = []
-    data.deployments.forEach(deployment => {
-      const found = temp.find(t => t.monthNumber === deployment.monthNumber && t.yearNumber === deployment.yearNumber)
-      if (found) {
-        found.deploymentsInBucket = found.deploymentsInBucket.concat(deployment.deploymentsInBucket)
+    const temp: Deployment[] = [];
+    data.deployments.forEach((deployment) => {
+      const found = temp.find(
+        (t) =>
+          t.monthNumber === deployment.monthNumber &&
+          t.yearNumber === deployment.yearNumber
+      );
+      if (found) {
+        found.deploymentsInBucket = found.deploymentsInBucket.concat(
+          deployment.deploymentsInBucket
+        );
       } else {
         temp.push({
-          date: new Date(deployment.yearNumber, deployment.monthNumber-1, 1),
+          date: new Date(deployment.yearNumber, deployment.monthNumber - 1, 1),
           monthNumber: deployment.monthNumber,
           yearNumber: deployment.yearNumber,
-          deploymentsInBucket: deployment.deploymentsInBucket
-        })
+          deploymentsInBucket: deployment.deploymentsInBucket,
+        });
       }
-    })
-    return temp.map(deployment => {
-      deployment["count"] = deployment.deploymentsInBucket.length
-      return deployment
-    })
-  }
-  const displayData: Deployment[] = (months < daily) ? getDaily(data) : (months < weekly) ? getWeekly(data) : getMonthly(data)
-  
-  const CustomTooltip = ({ active, payload, label }:{ active:any, payload:any, label:any } ) => {
+    });
+    return temp.map((deployment) => {
+      deployment["count"] = deployment.deploymentsInBucket.length;
+      return deployment;
+    });
+  };
+  const displayData: Deployment[] =
+    months < daily
+      ? getDaily(data)
+      : months < weekly
+      ? getWeekly(data)
+      : getMonthly(data);
+
+  const CustomTooltip = ({
+    active,
+    payload,
+    label,
+  }: {
+    active: boolean | undefined;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    payload: Array<any>;
+    label: Date | undefined;
+  }) => {
     if (active && payload && payload.length) {
       return (
-        <div style={{backgroundColor: COLORS.PAPER, padding: "5px", borderRadius: "10px"}}>
+        <div
+          style={{
+            backgroundColor: COLORS.PAPER,
+            padding: "5px",
+            borderRadius: "10px",
+          }}
+        >
           <p className="label">{`Deployments : ${payload[0].value}`}</p>
-          <p className="date">{`Date : ${label.toDateString()}`}</p>
+          <p className="date">{`Date : ${(label as Date).toDateString()}`}</p>
         </div>
       );
     }
     return null;
   };
-  
 
   return (
-    <ResponsiveContainer width="100%" height="100%">
-      <BarChart data={displayData}>
+    <ResponsiveContainer height="100%" width="100%">
+      <BarChart
+        data={displayData}
+        margin={{
+          top: 50,
+          right: 20,
+          bottom: 10,
+          left: 0,
+        }}
+      >
         <CartesianGrid vertical={false} />
+        <text
+          dominantBaseline="central"
+          fill={COLORS.WHITE}
+          textAnchor="middle"
+          x={200}
+          y={20}
+        >
+          <tspan fontSize="20" fontWeight="bolder">
+            Deployment Frequency
+          </tspan>
+        </text>
         <XAxis dataKey="date" tickFormatter={d3.timeFormat("%d %B")} />
         <YAxis />
-        <Tooltip cursor={{fill: 'rgba(255, 255, 255, 0.1)'}} content={<CustomTooltip active={undefined} payload={undefined} label={undefined} />} />
+        <Tooltip
+          content={
+            <CustomTooltip active={undefined} label={undefined} payload={[]} />
+          }
+          cursor={{ fill: "rgba(255, 255, 255, 0.1)" }}
+        />
         <Bar dataKey="count" fill={COLORS.BLUE} />
       </BarChart>
     </ResponsiveContainer>
-  )
+  );
 }

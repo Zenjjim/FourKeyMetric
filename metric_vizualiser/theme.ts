@@ -21,4 +21,15 @@ export const theme = extendTheme({
       },
     },
   },
+  components: {
+    Select: {
+      baseStyle: {
+        bg: "black",
+        color: "pink",
+      },
+    },
+    option: {
+      color: "black",
+    },
+  },
 });

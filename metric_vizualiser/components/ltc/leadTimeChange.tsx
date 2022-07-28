@@ -1,100 +1,151 @@
-import { Text } from "@chakra-ui/react";
-import * as Plot from "@observablehq/plot";
 import { COLORS } from "const";
-import { useEffect, useRef } from "react";
+import * as d3 from "d3";
+import {
+  CartesianGrid,
+  ComposedChart,
+  Line,
+  ResponsiveContainer,
+  Scatter,
+  Tooltip,
+  XAxis,
+  YAxis,
+  ZAxis,
+} from "recharts";
 import { ILeadTimeChange } from "types";
 import { getDateOfWeek } from "utils";
 type LeadTimeChangeProps = {
-  data?: ILeadTimeChange;
+  data: ILeadTimeChange;
   months: number;
-  size: { width: number; height: number };
 };
 
-export function LeadTimeChange({ data, months, size }: LeadTimeChangeProps) {
-  const headerRef = useRef(null);
-  useEffect(() => {
-    if (data === undefined) {
-      return;
-    }
-    const getMontlyLeadTimeChange = (data: ILeadTimeChange) =>
-      data.monthlyLeadTimeChange.map((d) => ({
-        date: new Date(d.key.yearNumber, d.key.monthNumber),
-        median: d.median / 3600,
-      }));
-    const getWeeklyLeadTimeChange = (data: ILeadTimeChange) =>
-      data.weeklyLeadTimeChange.map((d) => ({
-        date: getDateOfWeek(d.key.weekNumber, d.key.yearNumber),
-        median: d.median / 3600,
-      }));
-
-    const interval =
-      months < 4 ? data.weeklyLeadTimeChange : data.monthlyLeadTimeChange;
-    const transformedDataMedian =
-      months < 4
-        ? getWeeklyLeadTimeChange(data)
-        : getMontlyLeadTimeChange(data);
-
-    const transformedData = data.changes.map((d) => ({
-      date: new Date(d.startTime * 1000),
-      time: (d.finishTime - d.startTime) / 3600,
-      prSize: d.prSize,
-      nrOfCommits: d.nrOfCommits,
+export function LeadTimeChange({ data, months }: LeadTimeChangeProps) {
+  const getMontlyLeadTimeChange = (data: ILeadTimeChange) =>
+    data.monthlyLeadTimeChange.map((d) => ({
+      date: new Date(d.key.yearNumber, d.key.monthNumber - 1).getTime(),
+      median: d.median / 3600,
     }));
+  const getWeeklyLeadTimeChange = (data: ILeadTimeChange) =>
+    data.weeklyLeadTimeChange.map((d) => ({
+      date: getDateOfWeek(d.key.weekNumber, d.key.yearNumber).getTime(),
+      median: d.median / 3600,
+    }));
+  const transformedDataMedian =
+    months < 6 ? getWeeklyLeadTimeChange(data) : getMontlyLeadTimeChange(data);
 
-    const chart = Plot.plot({
-      style: {
-        background: COLORS.PAPER,
-      },
-      y: {
-        grid: true,
-        label: "Hours",
-      },
-      color: {
-        type: "diverging",
-        scheme: "burd",
-        range: ["red", "blue"],
-        interpolate: "hcl",
-      },
-      marks: [
-        Plot.ruleY([0]),
-        Plot.line(transformedDataMedian, {
-          x: "date",
-          y: "median",
-          curve: "basis",
-          marker: "circle",
-          stroke: COLORS.BLUE,
-          opacity: 1,
-        }),
+  const prData = data.changes.map((d) => ({
+    date: new Date(d.startTime * 1000).getTime(),
+    median: (d.finishTime - d.startTime) / 3600,
+    prSize: d.prSize,
+    nrOfCommits: d.nrOfCommits,
+  }));
 
-        Plot.dot(transformedData, {
-          x: "date",
-          y: "time",
-          r: "nrOfCommits",
-          fill: COLORS.BLUE,
-          fillOpacity: 0.75,
-          interval: interval,
-        }),
-      ],
-      width: size.width,
-      height: size.height,
-    });
-    // @ts-ignore
-    headerRef.current.append(chart);
-    return () => chart.remove();
-  }, [data, months, size]);
+  const CustomTooltip = ({
+    active,
+    payload,
+  }: {
+    active: boolean | undefined;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    payload: Array<any>;
+  }) => {
+    if (
+      active &&
+      payload.length > 0 &&
+      // eslint-disable-next-line no-prototype-builtins
+      !payload[0].payload.hasOwnProperty("prSize")
+    ) {
+      return (
+        <div
+          style={{
+            backgroundColor: COLORS.PAPER,
+            padding: "5px",
+            borderRadius: "10px",
+          }}
+        >
+          <p className="label">{`Time to Change : ${
+            Math.round(payload[0].payload.median) + " Hours"
+          }`}</p>
+          <p className="label">{`Date : ${new Date(
+            payload[0].payload.date
+          ).toDateString()}`}</p>
+        </div>
+      );
+    }
+    return null;
+  };
 
   return (
-    <div
-      style={{
-        justifyContent: "space-between",
-        display: "flex",
-        flexDirection: "column",
-        height: "100%",
-        margin: "0 10px",
-      }}
-    >
-      <Text fontSize="2xl">{"Lead Time for Changes"}</Text>
-      <div ref={headerRef} style={{ marginBottom: "20px" }} />
-    </div>
+    <ResponsiveContainer height="100%" width="100%">
+      <ComposedChart margin={{ top: 50, right: 40, bottom: 20, left: 10 }}>
+        <text
+          dominantBaseline="central"
+          fill={COLORS.WHITE}
+          textAnchor="middle"
+          x={200}
+          y={20}
+        >
+          <tspan fontSize="20" fontWeight="bolder">
+            Median Lead Time to Change
+          </tspan>
+        </text>
+
+        <XAxis
+          dataKey="date"
+          domain={["dataMin", "dataMax"]}
+          label={{
+            value: "Date",
+            dx: 0,
+            dy: 50,
+            fill: COLORS.WHITE,
+            opacity: 0.75,
+          }}
+          opacity={0.75}
+          stroke={COLORS.WHITE}
+          tickFormatter={d3.timeFormat("%d %B")}
+          type="number"
+          xAxisId={1}
+        />
+        <YAxis
+          dataKey="median"
+          label={{
+            value: "Hours",
+            angle: -90,
+            dx: -30,
+            dy: 0,
+            fill: COLORS.WHITE,
+            opacity: 0.75,
+          }}
+          opacity={0.75}
+          stroke={COLORS.WHITE}
+          type="number"
+          yAxisId={1}
+        />
+        <Scatter
+          data={prData}
+          fill={COLORS.BLUE}
+          fillOpacity={0.75}
+          isAnimationActive={false}
+          xAxisId={1}
+          yAxisId={1}
+          zAxisId={1}
+        ></Scatter>
+        <Line
+          data={transformedDataMedian}
+          dataKey="median"
+          dot={true}
+          isAnimationActive={false}
+          stroke={COLORS.BLUE}
+          strokeWidth={3}
+          type="monotone"
+          xAxisId={1}
+          yAxisId={1}
+        />
+        <CartesianGrid opacity={0.25} stroke={COLORS.WHITE} vertical={false} />
+        <Tooltip
+          content={<CustomTooltip active={undefined} payload={[]} />}
+          cursor={{ fill: "rgba(255, 255, 255, 0.1)" }}
+        />
+        <ZAxis dataKey="prSize" range={[0, 4000]} zAxisId={1} />
+      </ComposedChart>
+    </ResponsiveContainer>
   );
 }

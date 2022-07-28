@@ -3,20 +3,11 @@ import { COLORS } from "const";
 import { IDeploymentFrequency } from "types";
 type DeploymentFrequencyProps = {
   data: IDeploymentFrequency;
-  textSize: number;
 };
-export function DeploymentFrequencyScore({
-  data,
-  textSize,
-}: DeploymentFrequencyProps) {
+export function DeploymentFrequencyScore({ data }: DeploymentFrequencyProps) {
   const [category, color] = df_category(data);
   return (
-    <Score
-      category={category}
-      color={color}
-      textSize={textSize}
-      title={"Deployment Frequency"}
-    />
+    <Score category={category} color={color} title={"Deployment Frequency"} />
   );
 }
 
@@ -43,4 +34,4 @@ export enum DeploymentFrequencyEnums {
   WEEKLY = "Weekly",
   MONTHLY = "Monthly",
   YEARLY = "Yearly",
-} 
+}

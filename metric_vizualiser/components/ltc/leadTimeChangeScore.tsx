@@ -2,16 +2,11 @@ import { Score } from "components/score";
 import { COLORS } from "const";
 import { ILeadTimeChange } from "types";
 import { getHoursfromSeconds } from "utils";
-type LeadTimeChangeProps = { data: ILeadTimeChange; textSize: number };
-export function LeadTimeChangeScore({ data, textSize }: LeadTimeChangeProps) {
+type LeadTimeChangeProps = { data: ILeadTimeChange };
+export function LeadTimeChangeScore({ data }: LeadTimeChangeProps) {
   const [category, color] = ltc_category(data?.medianLeadTimeChange);
   return (
-    <Score
-      category={category}
-      color={color}
-      textSize={textSize}
-      title={"Lead Time to Change"}
-    />
+    <Score category={category} color={color} title={"Lead Time to Change"} />
   );
 }
 
