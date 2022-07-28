@@ -75,7 +75,7 @@ export function LeadTimeChange({ data, months }: LeadTimeChangeProps) {
 
   return (
     <ResponsiveContainer height="100%" width="100%">
-      <ComposedChart margin={{ top: 50, right: 40, bottom: 20, left: 10 }}>
+      <ComposedChart margin={{ top: 50, right: 50, bottom: 30, left: 30 }}>
         <text
           dominantBaseline="central"
           fill={COLORS.WHITE}
@@ -94,7 +94,7 @@ export function LeadTimeChange({ data, months }: LeadTimeChangeProps) {
           label={{
             value: "Date",
             dx: 0,
-            dy: 50,
+            dy: 25,
             fill: COLORS.WHITE,
             opacity: 0.75,
           }}

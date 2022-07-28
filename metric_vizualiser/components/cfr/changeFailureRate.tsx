@@ -77,8 +77,8 @@ export function ChangeFailureRate({ data, months }: ChangeFailureRateProps) {
         margin={{
           top: 50,
           right: 50,
-          bottom: 50,
-          left: 50,
+          bottom: 30,
+          left: 30,
         }}
       >
         <text
@@ -98,7 +98,7 @@ export function ChangeFailureRate({ data, months }: ChangeFailureRateProps) {
           label={{
             value: "Date",
             dx: 0,
-            dy: 20,
+            dy: 25,
             fill: COLORS.WHITE,
             opacity: 0.75,
           }}

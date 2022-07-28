@@ -2,7 +2,7 @@ import { ChangeFailureRate } from "components/cfr/changeFailureRate";
 import { ChangeFailureRateScore } from "components/cfr/changeFailureRateScore";
 import { DeploymentFrequency } from "components/df/deploymentFrequency";
 import { DeploymentFrequencyScore } from "components/df/deploymentFrequencyScore";
-import { Filter } from "components/filter";
+import { Filter } from "components/Filter";
 import { LeadTimeChange } from "components/ltc/leadTimeChange";
 import { LeadTimeChangeScore } from "components/ltc/leadTimeChangeScore";
 import { TimeToRestoreService } from "components/ttrs/timeToRestoreService";

@@ -90,12 +90,12 @@ export const Filter = ({ info }: FilterProps) => {
           variant={"ghost"}
           width="fit-content"
         >
-          {isOpen ? "Lukk Filter" : "Åpne Filter"}
+          {isOpen ? "Close Filter" : "Open Filter"}
         </Button>
         <Collapse in={isOpen}>
           <form style={{ display: "flex", gap: "20px" }}>
             <Select
-              placeholder={"Organisasjon"}
+              placeholder={"Organization"}
               {...register("organization")}
               color="white"
               onChange={(e) => {
@@ -112,7 +112,7 @@ export const Filter = ({ info }: FilterProps) => {
             </Select>
             <Select
               disabled={!organizationWatch}
-              placeholder={"Prosjekt"}
+              placeholder={"Project"}
               {...register("project")}
               onChange={(e) => {
                 setValue("project", e.target.value);
@@ -127,7 +127,7 @@ export const Filter = ({ info }: FilterProps) => {
             </Select>
             <Select
               disabled={!projectWatch || !organizationWatch}
-              placeholder={"Kolleksjon"}
+              placeholder={"Repository"}
               {...register("repository")}
             >
               {((info[organizationWatch] ?? "")[projectWatch] ?? []).map(

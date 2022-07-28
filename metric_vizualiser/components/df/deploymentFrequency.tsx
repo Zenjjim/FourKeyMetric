@@ -129,9 +129,9 @@ export function DeploymentFrequency({
         data={displayData}
         margin={{
           top: 50,
-          right: 20,
-          bottom: 10,
-          left: 0,
+          right: 50,
+          bottom: 30,
+          left: 30,
         }}
       >
         <CartesianGrid vertical={false} />
@@ -146,8 +146,31 @@ export function DeploymentFrequency({
             Deployment Frequency
           </tspan>
         </text>
-        <XAxis dataKey="date" tickFormatter={d3.timeFormat("%d %B")} />
-        <YAxis />
+        <XAxis
+          dataKey="date"
+          label={{
+            value: "Date",
+            dx: 0,
+            dy: 25,
+            fill: COLORS.WHITE,
+            opacity: 0.75,
+          }}
+          opacity={0.75}
+          stroke={COLORS.WHITE}
+          tickFormatter={d3.timeFormat("%d %B")}
+        />
+        <YAxis
+          label={{
+            value: "Deploys",
+            angle: -90,
+            dx: -30,
+            dy: 0,
+            fill: COLORS.WHITE,
+            opacity: 0.75,
+          }}
+          opacity={0.75}
+          stroke={COLORS.WHITE}
+        />
         <Tooltip
           content={
             <CustomTooltip active={undefined} label={undefined} payload={[]} />
