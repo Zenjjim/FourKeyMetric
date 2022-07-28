@@ -18,13 +18,9 @@ public class FetchDataService
         _deploymentService = new DeploymentService();
         _changeService = new ChangeService();
         _incidentService = new IncidentService();
-        _azure = new AzureHandler(Environment.GetEnvironmentVariable("AZURE_TOKEN"));
+        
+        _azure = new AzureHandler(Convert.ToBase64String(System.Text.ASCIIEncoding.ASCII.GetBytes($":{Environment.GetEnvironmentVariable("AZURE_TOKEN")}")));
         _jira = new JiraHandler(System.Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes($"{Environment.GetEnvironmentVariable("JIRA_USER")}:{Environment.GetEnvironmentVariable("JIRA_TOKEN")}")));
-    }
-
-    public String Get()
-    {
-        return "Her kommer masse data";
     }
 
     public void FetchAllData()

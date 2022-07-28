@@ -1,6 +1,7 @@
 
 using devops_metrics.Models;
 using devops_metrics.Services.DevOpsMetricServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace devops_metrics.Controllers;
@@ -20,6 +21,7 @@ public class ChangeFailureRateController : ControllerBase
     }
 
     [HttpGet(Name = "GetChangeFailureRateService")]
+    [Authorize]
     public Task<ChangeFailureRateModel> Get([FromQuery(Name = "organization")] string? organization,
         [FromQuery(Name = "project")] string? project, [FromQuery(Name = "repository")] string? repository,
         [FromQuery(Name = "intervalMonths")] int intervalMonths = 3)

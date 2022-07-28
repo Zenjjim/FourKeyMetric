@@ -1,5 +1,6 @@
 using devops_metrics.Models;
 using devops_metrics.Services.DevOpsMetricServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace devops_metrics.Controllers;
@@ -19,6 +20,7 @@ public class LeadTimeChangeController : ControllerBase
     }
 
     [HttpGet(Name = "GetLeadTimeChange")]
+    [Authorize]
     public Task<LeadTimeChangeModel> Get([FromQuery(Name = "organization")] string? organization,
         [FromQuery(Name = "project")] string? project, [FromQuery(Name = "repository")] string? repository,
         [FromQuery(Name = "intervalMonths")] int intervalMonths = 3)

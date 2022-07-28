@@ -1,5 +1,6 @@
 using devops_metrics.Models;
 using devops_metrics.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace devops_metrics.Controllers;
@@ -17,6 +18,7 @@ public class InfoController : ControllerBase
     }
 
     [HttpGet(Name = "GetInfo")]
+    [Authorize]
     public async Task<Dictionary<string, Dictionary<string, HashSet<string>>>> Get()
     {
         return await _infoService.GetInfo();

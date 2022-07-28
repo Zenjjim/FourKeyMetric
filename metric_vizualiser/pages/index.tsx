@@ -1,81 +1,93 @@
-import { ChangeFailureRate } from "components/cfr/changeFailureRate";
-import { ChangeFailureRateScore } from "components/cfr/changeFailureRateScore";
-import { DeploymentFrequency } from "components/df/deploymentFrequency";
-import { DeploymentFrequencyScore } from "components/df/deploymentFrequencyScore";
-import { Filter } from "components/Filter";
-import { LeadTimeChange } from "components/ltc/leadTimeChange";
-import { LeadTimeChangeScore } from "components/ltc/leadTimeChangeScore";
-import { TimeToRestoreService } from "components/ttrs/timeToRestoreService";
-import { TimeToRestoreServiceScore } from "components/ttrs/timeToRestoreServiceScore";
+import { Dashboard } from "components/dashboard";
 import { COLORS } from "const";
-import { GetServerSideProps, InferGetServerSidePropsType } from "next";
+import {
+  GetServerSideProps,
+  GetServerSidePropsContext,
+  InferGetServerSidePropsType,
+} from "next";
+import { unstable_getServerSession } from "next-auth";
+import { signOut } from "next-auth/react";
+import { nextAuthOptions } from "pages/api/auth/[...nextauth]";
 import safeJsonStringify from "safe-json-stringify";
-
-export const getServerSideProps: GetServerSideProps = async (context) => {
+export const getServerSideProps: GetServerSideProps = async (
+  context: GetServerSidePropsContext
+) => {
+  const session = await unstable_getServerSession(
+    context.req,
+    context.res,
+    nextAuthOptions
+  );
+  if (!session?.accessToken) {
+    return {
+      redirect: {
+        permanent: false,
+        destination: "/signin",
+      },
+    };
+  }
   if (!context.query?.months) {
     return {
       redirect: {
         permanent: false,
         destination: "/?months=3&organization=&project=&repository=",
       },
-      props: {},
     };
   }
-  const backend = "https://weu-dev-metric-app.azurewebsites.net/";
-  // const backend = "http://localhost:5118";
+  const backend = process.env.NEXT_PUBLIC_BACKEND_URL;
   const months = context.query.months;
   const organization = context.query.organization;
   const project = context.query.project;
   const repository = context.query.repository;
+  const headers = {
+    headers: { Authorization: "Bearer " + session?.accessToken },
+  };
   const filter = `organization=${organization}&project=${project}&repository=${repository}&intervalMonths=${months}`;
-  const df = await fetch(`${backend}/DeploymentFrequency?${filter}`)
+  const df = await fetch(`${backend}/DeploymentFrequency?${filter}`, headers)
     .then((response) => response.json())
     .then((json) => JSON.parse(safeJsonStringify(json)))
     .catch(function (error) {
       // eslint-disable-next-line no-console
       console.error(error);
+      return null;
     });
-  const ltc = await fetch(`${backend}/LeadTimeChange?${filter}`)
+  const ltc = await fetch(`${backend}/LeadTimeChange?${filter}`, headers)
     .then((response) => response.json())
     .then((json) => JSON.parse(safeJsonStringify(json)))
     .catch(function (error) {
       // eslint-disable-next-line no-console
       console.error(error);
+      return null;
     });
-  const cfr = await fetch(`${backend}/ChangeFailureRate?${filter}`)
+  const cfr = await fetch(`${backend}/ChangeFailureRate?${filter}`, headers)
     .then((response) => response.json())
     .then((json) => JSON.parse(safeJsonStringify(json)))
     .catch(function (error) {
       // eslint-disable-next-line no-console
       console.error(error);
+      return null;
     });
-  const ttrs = await fetch(`${backend}/RestoreServiceTime?${filter}`)
+  const ttrs = await fetch(`${backend}/RestoreServiceTime?${filter}`, headers)
     .then((response) => response.json())
     .then((json) => JSON.parse(safeJsonStringify(json)))
     .catch(function (error) {
       // eslint-disable-next-line no-console
       console.error(error);
+      return null;
     });
-  const info = await fetch(`${backend}/info`)
+  const info = await fetch(`${backend}/info`, headers)
     .then((response) => response.json())
     .then((json) => JSON.parse(safeJsonStringify(json)))
     .catch(function (error) {
       // eslint-disable-next-line no-console
       console.error(error);
+      return null;
     });
+  const safeSession = JSON.parse(safeJsonStringify(session));
   return {
-    props: { df, ltc, cfr, ttrs, info, months }, // will be passed to the page component as props
+    props: { df, ltc, cfr, ttrs, info, months, safeSession }, // will be passed to the page component as props
   };
 };
 
-const plotStyle = {
-  alignItems: "start",
-  justifyContent: "center",
-  display: "flex",
-  background: COLORS.PAPER,
-  borderRadius: "10px",
-  overflow: "hidden",
-};
 const Home = ({
   df,
   ltc,
@@ -83,78 +95,35 @@ const Home = ({
   ttrs,
   info,
   months,
+  safeSession,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
-  return (
-    <>
-      <Filter info={info} />
-      <div className="container">
-        <div
-          className="LeadTimeChangeScore"
-          style={{
-            justifyContent: "center",
-            textAlign: "center",
-            lineHeight: "normal",
-            display: "flex",
-            background: COLORS.PAPER,
-            borderRadius: "10px",
-          }}
-        >
-          <LeadTimeChangeScore data={ltc} />
+  if (safeSession) {
+    return (
+      <>
+        <div style={{ display: "flex", width: "100%", justifyContent: "end" }}>
+          <button
+            onClick={() => signOut()}
+            style={{
+              padding: "5px",
+              marginBottom: "5px",
+              backgroundColor: COLORS.PAPER,
+              borderRadius: "4px",
+            }}
+          >
+            Sign out
+          </button>
         </div>
-        <div
-          className="DeploymentFrequencyScore"
-          style={{
-            justifyContent: "center",
-            textAlign: "center",
-            lineHeight: "normal",
-            display: "flex",
-            background: COLORS.PAPER,
-            borderRadius: "10px",
-          }}
-        >
-          <DeploymentFrequencyScore data={df} />
-        </div>
-        <div
-          className="TimeToRestoreServiceScore"
-          style={{
-            justifyContent: "center",
-            textAlign: "center",
-            lineHeight: "normal",
-            display: "flex",
-            background: COLORS.PAPER,
-            borderRadius: "10px",
-          }}
-        >
-          <TimeToRestoreServiceScore data={ttrs} />
-        </div>
-        <div
-          className="ChangeFailureRateScore"
-          style={{
-            justifyContent: "center",
-            textAlign: "center",
-            lineHeight: "normal",
-            display: "flex",
-            background: COLORS.PAPER,
-            borderRadius: "10px",
-          }}
-        >
-          <ChangeFailureRateScore data={cfr} />
-        </div>
-        <div className="LeadTimeChange" style={plotStyle}>
-          <LeadTimeChange data={ltc} months={months} />
-        </div>
-        <div className="DeploymentFrequency" style={plotStyle}>
-          <DeploymentFrequency data={df} months={months} />
-        </div>
-        <div className="TimeToRestoreService" style={plotStyle}>
-          <TimeToRestoreService data={ttrs} months={months} />
-        </div>
-        <div className="ChangeFailureRate" style={plotStyle}>
-          <ChangeFailureRate data={cfr} months={months} />
-        </div>
-      </div>
-    </>
-  );
+        <Dashboard
+          cfr={cfr}
+          df={df}
+          info={info}
+          ltc={ltc}
+          months={months}
+          ttrs={ttrs}
+        />
+      </>
+    );
+  }
 };
 
 export default Home;

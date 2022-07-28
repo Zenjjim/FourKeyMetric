@@ -1,4 +1,8 @@
 using devops_metrics.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Protocols;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
+using Microsoft.IdentityModel.Tokens;
 
 DotNetEnv.Env.Load();
 
@@ -12,6 +16,33 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+var jwtConfig = builder.Configuration.GetSection("JwtConfig");
+var configManager = new ConfigurationManager<OpenIdConnectConfiguration>($"{jwtConfig["issuer"]}/.well-known/openid-configuration", new OpenIdConnectConfigurationRetriever());
+
+var openidconfig = configManager.GetConfigurationAsync().Result;
+builder.Services.AddAuthentication(opts =>
+{
+    opts.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+    opts.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(_ =>
+{
+    _.TokenValidationParameters = new TokenValidationParameters()
+    {
+        ValidIssuer = jwtConfig["issuer"],
+        ValidateIssuer = true,
+        
+        ValidAudience = jwtConfig["audience"],
+        ValidateAudience = true,
+        
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKeys = openidconfig.SigningKeys,
+        
+        RequireExpirationTime = true,
+        ValidateLifetime = true,
+        RequireSignedTokens = true,
+        
+    };
+});
 
 var app = builder.Build();
 
@@ -25,6 +56,7 @@ if (app.Environment.IsDevelopment())
 }
 //app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
