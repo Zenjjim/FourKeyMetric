@@ -13,7 +13,7 @@ export const nextAuthOptions: NextAuthOptions = {
     strategy: "jwt",
     maxAge: 30 * 24 * 60 * 60, // 30 days
   },
-
+  secret: process.env.AZURE_AD_CLIENT_SECRET,
   callbacks: {
     jwt: async ({ token, user, account }) => {
       if (user) {
