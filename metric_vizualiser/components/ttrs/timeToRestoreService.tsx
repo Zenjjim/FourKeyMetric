@@ -23,7 +23,7 @@ export function TimeToRestoreService({
 }: TimeToRestoreServiceProps) {
   const getmontlyTransformedDataMedian = (data: ITimeToRestoreService) =>
     data.monthlyRestoreServiceTime.map((d) => ({
-      date: new Date(d.key.yearNumber, d.key.monthNumber),
+      date: new Date(d.key.yearNumber, d.key.monthNumber - 1),
       median: d.median / 3600,
     }));
   const getweeklyTransformedDataMedian = (data: ITimeToRestoreService) =>
