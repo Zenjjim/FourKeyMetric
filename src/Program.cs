@@ -46,7 +46,7 @@ builder.Services.AddAuthentication(opts =>
 
 var app = builder.Build();
 
-app.UseCors(policy => policy.WithOrigins("http://localhost:3000").AllowAnyMethod()
+app.UseCors(policy => policy.WithOrigins("http://localhost:3000", "https://weu-dev-metric-web-app.azurewebsites.net").AllowAnyMethod()
     .AllowAnyHeader());
 
 if (app.Environment.IsDevelopment())
