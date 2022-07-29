@@ -1,4 +1,3 @@
-import { ChevronDownIcon, ChevronUpIcon } from "@chakra-ui/icons";
 import {
   Accordion,
   AccordionButton,
@@ -6,10 +5,7 @@ import {
   AccordionItem,
   AccordionPanel,
   Box,
-  Button,
-  Collapse,
   Flex,
-  Text,
   NumberDecrementStepper,
   NumberIncrementStepper,
   NumberInput,
@@ -20,7 +16,7 @@ import {
   SliderFilledTrack,
   SliderThumb,
   SliderTrack,
-  useDisclosure,
+  Text,
 } from "@chakra-ui/react";
 import { COLORS } from "const";
 import { useRouter } from "next/router";
@@ -36,7 +32,6 @@ export const Filter = ({ info }: FilterProps) => {
   const [value, setSlider] = useState<number>(Number(router.query?.months));
   const [debounceValue] = useDebounce(value, 1000);
   const handleChange = (value: number) => setSlider(value);
-  const { isOpen, onToggle } = useDisclosure();
   const { register, watch, setValue } = useForm({
     mode: "onChange",
     defaultValues: {
@@ -77,21 +72,21 @@ export const Filter = ({ info }: FilterProps) => {
 
   return (
     <>
-
-      <Accordion allowToggle background={COLORS.PAPER}
+      <Accordion
+        allowToggle
+        background={COLORS.PAPER}
         borderRadius={"10px"}
         display="flex"
         flexDirection="column"
         gap="10px"
         marginBottom="20px"
         padding="10px"
-        width="100%">
+        width="100%"
+      >
         <AccordionItem style={{ borderWidth: "0" }}>
           <AccordionButton>
-            <Box flex='1' textAlign='left'>
-              <Text fontSize={"2xl"}>
-                Filters
-              </Text>
+            <Box flex="1" textAlign="left">
+              <Text fontSize={"2xl"}>Filters</Text>
             </Box>
             <AccordionIcon />
           </AccordionButton>
@@ -107,11 +102,12 @@ export const Filter = ({ info }: FilterProps) => {
                   setValue("repository", ``);
                 }}
               >
-                {info && Object.keys(info).map((d: string) => (
-                  <option key={d} value={d}>
-                    {d}
-                  </option>
-                ))}
+                {info &&
+                  Object.keys(info).map((d: string) => (
+                    <option key={d} value={d}>
+                      {d}
+                    </option>
+                  ))}
               </Select>
               <Select
                 disabled={!organizationWatch}
@@ -122,31 +118,37 @@ export const Filter = ({ info }: FilterProps) => {
                   setValue("repository", ``);
                 }}
               >
-                {info && Object.keys(info[organizationWatch] ?? "").map((d: string) => (
-                  <option key={d} value={d}>
-                    {d}
-                  </option>
-                ))}
+                {info &&
+                  Object.keys(info[organizationWatch] ?? "").map(
+                    (d: string) => (
+                      <option key={d} value={d}>
+                        {d}
+                      </option>
+                    )
+                  )}
               </Select>
               <Select
                 disabled={!projectWatch || !organizationWatch}
                 placeholder={"Repository"}
                 {...register("repository")}
               >
-                {info && ((info[organizationWatch] ?? "")[projectWatch] ?? []).map(
-                  (d: string) => (
-                    <option key={d} value={d}>
-                      {d}
-                    </option>
-                  )
-                )}
+                {info &&
+                  ((info[organizationWatch] ?? "")[projectWatch] ?? []).map(
+                    (d: string) => (
+                      <option key={d} value={d}>
+                        {d}
+                      </option>
+                    )
+                  )}
               </Select>
-              <div style={{ position: "relative", width: "100%" }} >
-                <div style={{ position: "absolute", top: "-30px" }}>Selected Months</div>
+              <div style={{ position: "relative", width: "100%" }}>
+                <div style={{ position: "absolute", top: "-30px" }}>
+                  Selected Months
+                </div>
                 <Flex width="100%">
                   <NumberInput
-                    min={1}
                     maxW="100px"
+                    min={1}
                     mr="2rem"
                     onChange={(_: string, value: number) => handleChange(value)}
                     value={value}
@@ -161,10 +163,10 @@ export const Filter = ({ info }: FilterProps) => {
                     <Slider
                       flex="1"
                       focusThumbOnChange={false}
+                      max={24}
+                      min={1}
                       onChange={handleChange}
                       value={value}
-                      min={1}
-                      max={24}
                     >
                       <SliderTrack>
                         <SliderFilledTrack />
@@ -175,10 +177,8 @@ export const Filter = ({ info }: FilterProps) => {
                       </SliderThumb>
                     </Slider>
                   </div>
-
                 </Flex>
               </div>
-
             </form>
           </AccordionPanel>
         </AccordionItem>

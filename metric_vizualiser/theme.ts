@@ -3,8 +3,8 @@ import { extendTheme } from "@chakra-ui/react";
 export const theme = extendTheme({
   styles: {
     global: {
-      '.chakra-collapse': {
-        overflow: 'unset !important',
+      ".chakra-collapse": {
+        overflow: "unset !important",
       },
       body: {
         bg: "rgba(17,18,23,255)",
@@ -33,8 +33,8 @@ export const theme = extendTheme({
     },
     Collapse: {
       baseStyle: {
-        overflow: "unset"
-      }
+        overflow: "unset",
+      },
     },
     option: {
       color: "black",

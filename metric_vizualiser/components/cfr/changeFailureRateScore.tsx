@@ -3,14 +3,12 @@ import { COLORS } from "const";
 import { IChangeFailureRate } from "types";
 type ChangeFailureRateProps = { data: IChangeFailureRate };
 export function ChangeFailureRateScore({ data }: ChangeFailureRateProps) {
-  const title = "Change Failure Rate"
-  if (!data) return(
-      <Score category={"No Data"} color={COLORS.RED} title={title} />
-    )
+  const title = "Change Failure Rate";
+  if (!data) {
+    return <Score category={"No Data"} color={COLORS.RED} title={title} />;
+  }
   const [category, color] = cfr_category(data?.changeFailureRate);
-  return (
-    <Score category={category} color={color} title={title} />
-  );
+  return <Score category={category} color={color} title={title} />;
 }
 
 export function cfr_category(rate: number) {

@@ -101,7 +101,15 @@ const Home = ({
     return (
       <>
         <div style={{ display: "flex", width: "100%", justifyContent: "end" }}>
-          <span style={{marginRight: "10px", alignSelf: "center", paddingBottom: "6px"}}>Signed in as <b>{safeSession.user.name}</b></span>
+          <span
+            style={{
+              marginRight: "10px",
+              alignSelf: "center",
+              paddingBottom: "6px",
+            }}
+          >
+            Signed in as <b>{safeSession.user.name}</b>
+          </span>
           <button
             onClick={() => signOut()}
             style={{

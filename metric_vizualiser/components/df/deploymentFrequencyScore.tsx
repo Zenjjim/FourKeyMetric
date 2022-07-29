@@ -5,14 +5,12 @@ type DeploymentFrequencyProps = {
   data: IDeploymentFrequency;
 };
 export function DeploymentFrequencyScore({ data }: DeploymentFrequencyProps) {
-  const title = "Deployment Frequency"
-  if (!data) return(
-    <Score category={"No Data"} color={COLORS.RED} title={title} />
-  )
+  const title = "Deployment Frequency";
+  if (!data) {
+    return <Score category={"No Data"} color={COLORS.RED} title={title} />;
+  }
   const [category, color] = df_category(data);
-  return (
-    <Score category={category} color={color} title={title} />
-  );
+  return <Score category={category} color={color} title={title} />;
 }
 
 export function df_category({
