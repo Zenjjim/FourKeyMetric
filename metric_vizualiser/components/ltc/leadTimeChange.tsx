@@ -20,19 +20,19 @@ type LeadTimeChangeProps = {
 
 export function LeadTimeChange({ data, months }: LeadTimeChangeProps) {
   const getMontlyLeadTimeChange = (data: ILeadTimeChange) =>
-    data.monthlyLeadTimeChange.map((d) => ({
+    data?.monthlyLeadTimeChange.map((d) => ({
       date: new Date(d.key.yearNumber, d.key.monthNumber - 1).getTime(),
       median: d.median / 3600,
     }));
   const getWeeklyLeadTimeChange = (data: ILeadTimeChange) =>
-    data.weeklyLeadTimeChange.map((d) => ({
+    data?.weeklyLeadTimeChange.map((d) => ({
       date: getDateOfWeek(d.key.weekNumber, d.key.yearNumber).getTime(),
       median: d.median / 3600,
     }));
   const transformedDataMedian =
     months < 6 ? getWeeklyLeadTimeChange(data) : getMontlyLeadTimeChange(data);
 
-  const prData = data.changes.map((d) => ({
+  const prData = data?.changes.map((d) => ({
     date: new Date(d.startTime * 1000).getTime(),
     median: (d.finishTime - d.startTime) / 3600,
     prSize: d.prSize,
@@ -49,6 +49,7 @@ export function LeadTimeChange({ data, months }: LeadTimeChangeProps) {
   }) => {
     if (
       active &&
+      payload &&
       payload.length > 0 &&
       // eslint-disable-next-line no-prototype-builtins
       !payload[0].payload.hasOwnProperty("prSize")
@@ -79,8 +80,8 @@ export function LeadTimeChange({ data, months }: LeadTimeChangeProps) {
         <text
           dominantBaseline="central"
           fill={COLORS.WHITE}
-          textAnchor="middle"
-          x={200}
+          textAnchor="start"
+          x={90}
           y={20}
         >
           <tspan fontSize="20" fontWeight="bolder">

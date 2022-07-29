@@ -6,12 +6,18 @@ type TimeToRestoreServiceProps = {
   data: ITimeToRestoreService;
 };
 export function TimeToRestoreServiceScore({ data }: TimeToRestoreServiceProps) {
+  const title = "Time To Restore Service"
+  if (!data) {
+    if (!data) return(
+      <Score category={"No Data"} color={COLORS.RED} title={title} />
+    )
+  }
   const [category, color] = ttrs_category(data?.medianRestoreServiceTime);
   return (
     <Score
       category={category}
       color={color}
-      title={"Time To Restore Service"}
+      title={title}
     />
   );
 }

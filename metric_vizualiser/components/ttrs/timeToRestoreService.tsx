@@ -22,12 +22,12 @@ export function TimeToRestoreService({
   months,
 }: TimeToRestoreServiceProps) {
   const getmontlyTransformedDataMedian = (data: ITimeToRestoreService) =>
-    data.monthlyRestoreServiceTime.map((d) => ({
+    data?.monthlyRestoreServiceTime.map((d) => ({
       date: new Date(d.key.yearNumber, d.key.monthNumber - 1),
       median: d.median / 3600,
     }));
   const getweeklyTransformedDataMedian = (data: ITimeToRestoreService) =>
-    data.weeklyRestoreServiceTime.map((d) => ({
+    data?.weeklyRestoreServiceTime.map((d) => ({
       date: getDateOfWeek(d.key.weekNumber, d.key.yearNumber),
       median: d.median / 3600,
     }));
@@ -78,8 +78,8 @@ export function TimeToRestoreService({
         <text
           dominantBaseline="central"
           fill={COLORS.WHITE}
-          textAnchor="middle"
-          x={200}
+          textAnchor="start"
+          x={90}
           y={20}
         >
           <tspan fontSize="20" fontWeight="bolder">

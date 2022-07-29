@@ -19,18 +19,18 @@ type ChangeFailureRateProps = {
 
 export function ChangeFailureRate({ data, months }: ChangeFailureRateProps) {
   const getmontlyTransformedDataMedian = (data: IChangeFailureRate) =>
-    data.changeFailureRateByMonth.map((d) => ({
+    data?.changeFailureRateByMonth.map((d) => ({
       date: new Date(d.key.yearNumber, d.key.monthNumber),
       median: d.changeFailureRate * 100,
     }));
   const getweeklyTransformedDataMedian = (data: IChangeFailureRate) =>
-    data.changeFailureRateByWeek.map((d) => ({
+    data?.changeFailureRateByWeek.map((d) => ({
       date: getDateOfWeek(d.key.weekNumber, d.key.yearNumber),
       median: d.changeFailureRate * 100,
     }));
 
   const getDailyTransformedDataMedian = (data: IChangeFailureRate) =>
-    data.changeFailureRateByDay.map((d) => ({
+    data?.changeFailureRateByDay.map((d) => ({
       date: new Date(d.key.yearNumber, d.key.monthNumber, d.key.dayNumber),
       median: d.changeFailureRate * 100,
     }));
@@ -84,8 +84,8 @@ export function ChangeFailureRate({ data, months }: ChangeFailureRateProps) {
         <text
           dominantBaseline="central"
           fill={COLORS.WHITE}
-          textAnchor="middle"
-          x={200}
+          textAnchor="start"
+          x={90}
           y={20}
         >
           <tspan fontSize="20" fontWeight="bolder">

@@ -22,7 +22,7 @@ export function DeploymentFrequency({
   const daily = 2;
   const weekly = 6;
   const getDaily = (data: IDeploymentFrequency) => {
-    return data.deployments.map((deployment) => {
+    return data?.deployments.map((deployment) => {
       deployment["date"] = new Date(
         deployment.yearNumber,
         deployment.monthNumber - 1,
@@ -35,7 +35,7 @@ export function DeploymentFrequency({
 
   const getWeekly = (data: IDeploymentFrequency) => {
     const temp: Deployment[] = [];
-    data.deployments.forEach((deployment) => {
+    data?.deployments.forEach((deployment) => {
       const found = temp.find(
         (t) =>
           t.weekNumber === deployment.weekNumber &&
@@ -65,7 +65,7 @@ export function DeploymentFrequency({
   };
   const getMonthly = (data: IDeploymentFrequency) => {
     const temp: Deployment[] = [];
-    data.deployments.forEach((deployment) => {
+    data?.deployments.forEach((deployment) => {
       const found = temp.find(
         (t) =>
           t.monthNumber === deployment.monthNumber &&
@@ -138,8 +138,8 @@ export function DeploymentFrequency({
         <text
           dominantBaseline="central"
           fill={COLORS.WHITE}
-          textAnchor="middle"
-          x={200}
+          textAnchor="start"
+          x={90}
           y={20}
         >
           <tspan fontSize="20" fontWeight="bolder">
