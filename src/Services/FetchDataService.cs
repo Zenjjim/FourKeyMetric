@@ -43,9 +43,7 @@ public class FetchDataService
         var deployments = new List<Deployment>();
         var changes = new List<Change>();
         var incidents = new List<Incident>();
-        
-        var prFixWords = new List<string>{"bug", "fix", "crash", "error", "issue"};
-
+        var prFixWords = Environment.GetEnvironmentVariable("FIX_WORDS").Split(',').ToList();
         var projects = _azure.GetProjects(organization).Result.Value;
 
         foreach (var project in projects)
