@@ -17,14 +17,14 @@ export function TimeToRestoreServiceScore({ data }: TimeToRestoreServiceProps) {
 }
 
 export function ttrs_category(median: number) {
-  median = getHoursfromSeconds(median);
-  if (median <= 1) {
+  const medianHours = getHoursfromSeconds(median);
+  if (medianHours <= 1) {
     return ["One Hour", COLORS.PURPLE];
-  } else if (median <= 24) {
+  } else if (medianHours <= 8) {
     return ["One Day", COLORS.GREEN];
-  } else if (median <= 24 * 7) {
+  } else if (medianHours <= 8 * 5) {
     return ["One Week", COLORS.YELLOW];
-  } else if (median <= 24 * 7 * 4) {
+  } else if (medianHours <= 8 * 5 * 4.5) {
     return ["One Month", COLORS.YELLOW];
   } else {
     return ["One Year", COLORS.RED];

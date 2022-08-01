@@ -13,14 +13,14 @@ export function LeadTimeChangeScore({ data }: LeadTimeChangeProps) {
 }
 
 export function ltc_category(median: number) {
-  median = getHoursfromSeconds(median);
-  if (median <= 24) {
+  const medianHours = getHoursfromSeconds(median);
+  if (medianHours <= 8) {
     return ["One Day", COLORS.PURPLE];
-  } else if (median <= 24 * 7) {
+  } else if (medianHours <= 8 * 5) {
     return ["One Week", COLORS.GREEN];
-  } else if (median <= 24 * 7 * 4) {
+  } else if (medianHours <= 8 * 5 * 4.5) {
     return ["One Month", COLORS.YELLOW];
-  } else if (median <= 24 * 7 * 4 * 6) {
+  } else if (medianHours <= 8 * 5 * 4.5 * 6) {
     return ["Six Months", COLORS.YELLOW];
   } else {
     return ["One Year", COLORS.RED];
